@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signupform.dart';
+import 'signinform.dart';
 
 class home extends StatefulWidget{//We make the 'home' stateful because we want to change the contents of the body when we navigate around the
                                   //bottom bar. We could I guess make it more efficient, but I don't think the performance is going to get hampered
@@ -14,7 +15,7 @@ class _homeState extends State<home>{
   final tabs = [//This allows us to have different things in screen according to the item of the bottom bar we are on right now.
                 //If we tap the first item, the first widget in this list is loaded, and if we tap the second item, the second widget is loaded and so on.
     signupform(),
-    Text("HELLO"),//sign in to be here
+    signinform(),//sign in to be here
   ];
   @override
   Widget build(BuildContext context){

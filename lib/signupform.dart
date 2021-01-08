@@ -18,10 +18,9 @@ class _signupformState extends State<signupform>{
   //Whenever the user writes things in the textfield of the form, the form's state has obviously changed. After the user has completed the form,
   //they will press the submit button. On pressing the submit button, we want the state of the form as it is then to be able to use the entered
   //data for validation. The global key somehow creates a way to do that.
-  bool validated = false;//We declare this variable as am indication that the submitted form is valitaed, which enables us to showcase a text widget.
+  bool validated = false;//we declare this variable as am indication that the submitted form is valitaed, which enables us to showcase a text widget.
   //More context about this is apparent as you read the code below.
   bool email_exists = false;
-  bool image = true;
   TextEditingController emailController = new TextEditingController(); //This allows us to retrieve the text entered in email field.
   TextEditingController passwordController = new TextEditingController(); //This allows us to retrieve the text entered in password field.
   @override
