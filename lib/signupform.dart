@@ -197,7 +197,7 @@ class _signupformState extends State<signupform>{
 		  ),
 		),
 		SizedBox(height:20),
-		validated ? Text("Successful validation! Please verify your email address so that you can sign in.",
+		validated ? Text("Successful validation! Please verify your email address, which is a one time process, by going to your email inbox.",
 		  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),//When the boolean variable "validated" is true, this text widget is shown. You need 
 		//the ":SizedBox()" too for some reason. 
 		email_exists ? Text("User with that e-mail already exists",//Same as above but for "email already eixsts".

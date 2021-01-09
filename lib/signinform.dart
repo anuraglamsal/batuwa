@@ -11,9 +11,10 @@ class signinform extends StatefulWidget{
 
 class _signinformState extends State<signinform>{
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  bool email_exists = false;
-  bool validated = false;
-  bool checkbox = false;
+  bool emailnotfound = false;
+  bool wrongpassword = false;
+  bool verifyyouremail = false;
+  bool successful = false;
   TextEditingController emailController = new TextEditingController(); 
   TextEditingController passwordController = new TextEditingController(); 
   @override
@@ -79,16 +80,20 @@ class _signinformState extends State<signinform>{
 		    validator: (value){  
 		      if(value.isEmpty){
 			setState((){ 
-			  validated = false;
-			  email_exists = false;
+			  emailnotfound = false;
+			  wrongpassword = false;
+			  successful = false;
+			  verifyyouremail = false;
 			});
 			return "Required"; 
 		      }
 		      else{
 			if(!EmailValidator.validate(value)){
 			  setState((){
-			    validated = false;
-			    email_exists = false;
+			    emailnotfound = false;
+			    wrongpassword = false;
+			    successful = false;
+			    verifyyouremail = false;
 			  });
 			  return "Not a valid email";
 			}
@@ -132,22 +137,28 @@ class _signinformState extends State<signinform>{
 		    validator: (value){ 
 		      if(value.isEmpty){
 			setState((){
-			  validated = false;
-			  email_exists = false;
+			  emailnotfound = false;
+			  wrongpassword = false;
+			  successful = false;
+			  verifyyouremail = false;
 			});
 			return "Required";
 		      }
 		      else if(value.length<12){
 			setState((){
-			  validated = false;
-			  email_exists = false;
+			  emailnotfound = false;
+			  wrongpassword = false;
+			  successful = false;
+			  verifyyouremail = false;
 			});
 			return "A password of length more than or equal to 12 is required";
 		      }
 		      else if(!validateStructure(value)){
 			setState((){
-			  validated = false;
-			  email_exists = false;
+			  emailnotfound = false;
+			  wrongpassword = false;
+			  successful = false;
+			  verifyyouremail = false;
 			});
 			return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
 		      }
@@ -169,7 +180,8 @@ class _signinformState extends State<signinform>{
 		    color: Colors.blueGrey[700],
 		    onPressed: () {
 		      if(formkey.currentState.validate()){  
-			//send the user data here. 
+			check();
+			signinUser(emailController.text, passwordController.text);
 		      }
 		    },
 		    child: Text(
@@ -182,10 +194,18 @@ class _signinformState extends State<signinform>{
 		  ),
 		),
 		SizedBox(height:20),
-		validated ? Text("Successful validation! Please verify your email address so that you can sign in.",
-		  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(), 
-		email_exists ? Text("User with that e-mail already exists",
-		  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+		emailnotfound ?
+		    Text("The email entered doesn't exist in the database.",
+		         style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+		wrongpassword ?
+		    Text("The password entered is wrong.",
+		         style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+                verifyyouremail ?
+		    Text("Email verification not completed.",
+		         style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+		successful ?
+		    Text("Sign in successful!",
+		         style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
               ]
             )
           )
@@ -198,6 +218,60 @@ class _signinformState extends State<signinform>{
     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
+  }
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  void check() async{
+    if(auth.currentUser != null){
+      await auth.signOut();
+    }
+  }
+
+  void signinUser(email, password) async{
+    bool flag = true;
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+	email: email,
+	password: password
+      );
+    } on FirebaseAuthException catch (e) {
+      bool flag = false;
+      if (e.code == 'user-not-found') {
+	setState((){
+	   emailnotfound = true;
+	   wrongpassword = false;
+	   successful = false;
+	   verifyyouremail = false;
+        });
+      } else if (e.code == 'wrong-password') {
+	setState((){
+	  emailnotfound = false;
+	  wrongpassword = true;
+	  successful = false;
+	  verifyyouremail = false;
+	});
+      }
+    }
+    if(flag){
+      if(!auth.currentUser.emailVerified){
+	auth.currentUser.sendEmailVerification();
+	setState((){
+	  emailnotfound = false;
+	  wrongpassword = false;
+	  successful = false;
+	  verifyyouremail = true;
+        });
+      }
+      else{
+	setState((){
+	  emailnotfound = false;
+	  wrongpassword = false;
+	  successful = true;
+	  verifyyouremail = false;
+	});
+      }
+    }
   }
 
   void _launchURL() async {
