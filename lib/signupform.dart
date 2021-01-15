@@ -244,6 +244,7 @@ class _signupformState extends State<signupform>{
 	//respective booleans have the respective values.
 	//User user = auth.currentUser;
 	auth.currentUser.sendEmailVerification();
+	await auth.signOut();
 	setState((){
 	  email_exists = false;
 	  validated = true;
