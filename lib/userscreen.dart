@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'connection.dart';
+import 'null_check.dart';
 
 class userscreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
+    final check = Provider.of<Connection>(context);
     return Container(
       child: Column(
 	children: <Widget>[
@@ -14,13 +18,13 @@ class userscreen extends StatelessWidget{
 	    ),
 	    onPressed:(){
 	      logout();
+	      Future.delayed(const Duration(milliseconds: 500), (){
+		check.logged = false;
+	      });
 	    }
 	  )
 	],
       ),
     );
-  }
-  void logout() async{
-    await FirebaseAuth.instance.signOut();
   }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';//for flutter syntax 
 import 'package:email_validator/email_validator.dart';//for email validator
-import 'package:firebase_auth/firebase_auth.dart';//for firebase auth
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:firebase_auth/firebase_auth.dart';//for firebase auth
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'userscreen.dart';
 import 'connection.dart';
+import 'auth.dart';
 
 
 class signinform extends StatefulWidget{
@@ -14,6 +15,7 @@ class signinform extends StatefulWidget{
 } 
 
 class _signinformState extends State<signinform>{
+  var check;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool emailnotfound = false;
   bool wrongpassword = false;
@@ -23,7 +25,7 @@ class _signinformState extends State<signinform>{
   TextEditingController passwordController = new TextEditingController(); 
   @override
   Widget build(BuildContext context){
-    final check = Provider.of<Connection>(context);
+    get_context(context);
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible){
 	return Form(
@@ -185,9 +187,7 @@ class _signinformState extends State<signinform>{
 		    color: Colors.blueGrey[700],
 		    onPressed: () {
 		      if(formkey.currentState.validate()){  
-			//check();
 			signinUser(emailController.text, passwordController.text);
-			check.logged = true;
 		      }
 		    },
 		    child: Text(
@@ -209,8 +209,6 @@ class _signinformState extends State<signinform>{
                 verifyyouremail ?
 		    Text("Email verification not completed.",
 		         style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
-		/*successful ?
-		    Text("Sadge",):SizedBox(),*/
               ]
             )
           )
@@ -225,15 +223,11 @@ class _signinformState extends State<signinform>{
     return regExp.hasMatch(value);
   }
 
-  FirebaseAuth auth = FirebaseAuth.instance;
+  get_context(BuildContext context){
+    check = Provider.of<Connection>(context);
+  }
 
-  /*void check() async{
-    if(auth.currentUser != null){
-      await auth.signOut();
-    }
-  }*/
-
-  void signinUser(email, password) async{
+  Future<void> signinUser(email, password) async{
     bool flag = true;
     try {
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -267,6 +261,9 @@ class _signinformState extends State<signinform>{
 	  successful = false;
 	  verifyyouremail = true;
         });
+      }
+      else{
+	check.logged = true;
       }
     }
   }
