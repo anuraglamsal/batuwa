@@ -4,10 +4,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:firebase_auth/firebase_auth.dart';//for firebase auth
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
-import 'userscreen.dart';
 import 'connection.dart';
-import 'auth.dart';
-
 
 class signinform extends StatefulWidget{
   @override
@@ -226,6 +223,8 @@ class _signinformState extends State<signinform>{
   get_context(BuildContext context){
     check = Provider.of<Connection>(context);
   }
+
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<void> signinUser(email, password) async{
     bool flag = true;
