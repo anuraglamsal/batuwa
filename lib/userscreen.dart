@@ -7,7 +7,7 @@ import 'null_check.dart';
 class userscreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
-    final check = Provider.of<Connection>(context);
+    final check = Provider.of<Connection_1>(context);//We are also connecting this widget to "MyApp". You have to use the same variable name.
     return Container(
       child: Column(
 	children: <Widget>[
@@ -18,7 +18,7 @@ class userscreen extends StatelessWidget{
 	    ),
 	    onPressed:(){
 	      logout();
-	      Future.delayed(const Duration(milliseconds: 500), (){
+	      Future.delayed(const Duration(milliseconds: 500), (){ //This is because we encounter syncing problems as signing out takes a bit of time.
 		check.logged = false;
 	      });
 	    }

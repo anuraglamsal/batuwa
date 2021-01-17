@@ -1,29 +1,30 @@
-import 'package:flutter/material.dart';//for flutter syntax 
-import 'package:email_validator/email_validator.dart';//for email validator
+import 'package:flutter/material.dart'; 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:firebase_auth/firebase_auth.dart';//for firebase auth
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'connection.dart';
 
-class signinform extends StatefulWidget{
+class signinform extends StatefulWidget{ //Needs to be stateful because we show messages based on errors of sign in.
   @override
   _signinformState createState() => _signinformState();
 } 
 
 class _signinformState extends State<signinform>{
-  var check;
+  var check; //The variable that is passed on to the connected widget i.e. "MyApp" in this case.
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  bool emailnotfound = false;
+  bool emailnotfound = false; //These booleans are used to show error messages.
   bool wrongpassword = false;
   bool verifyyouremail = false;
   bool successful = false;
-  TextEditingController emailController = new TextEditingController(); 
+  TextEditingController emailController = new TextEditingController(); //These controllers are used to fetch form-entered data in real-time.
   TextEditingController passwordController = new TextEditingController(); 
   @override
   Widget build(BuildContext context){
-    get_context(context);
-    return KeyboardVisibilityBuilder(
+    get_context(context); //You need to send the context of the value sending widget to be connected to the receiving one. 
+    return KeyboardVisibilityBuilder( //Detects if there is keyboard on the screen. This allows us to do stuff depending upon keyboard being on 
+                                      //screen or not without using "setState" which is pretty neat.
       builder: (context, isKeyboardVisible){
 	return Form(
 	  key: formkey, 
@@ -35,7 +36,8 @@ class _signinformState extends State<signinform>{
 	      children: <Widget>[
 		SizedBox(height: 10),
 		!isKeyboardVisible ? 
-		Image.asset('assets/images/logo2.png', width: 300, height: 150):SizedBox(),
+		Image.asset('assets/images/logo2.png', width: 300, height: 150):SizedBox(), //The logo is removed when the keyboard is on screen
+		                                                                            //to allow for more space.
 		Container(
 		  height: 58,
 		  width: 350,
@@ -83,22 +85,12 @@ class _signinformState extends State<signinform>{
 		    cursorColor: Colors.blueGrey,
 		    validator: (value){  
 		      if(value.isEmpty){
-			setState((){ 
-			  emailnotfound = false;
-			  wrongpassword = false;
-			  successful = false;
-			  verifyyouremail = false;
-			});
+			remove_errors_from_screen();
 			return "Required"; 
 		      }
 		      else{
 			if(!EmailValidator.validate(value)){
-			  setState((){
-			    emailnotfound = false;
-			    wrongpassword = false;
-			    successful = false;
-			    verifyyouremail = false;
-			  });
+			  remove_errors_from_screen();
 			  return "Not a valid email";
 			}
 		      }
@@ -140,30 +132,15 @@ class _signinformState extends State<signinform>{
 		    cursorColor: Colors.blueGrey,
 		    validator: (value){ 
 		      if(value.isEmpty){
-			setState((){
-			  emailnotfound = false;
-			  wrongpassword = false;
-			  successful = false;
-			  verifyyouremail = false;
-			});
+			remove_errors_from_screen();
 			return "Required";
 		      }
 		      else if(value.length<12){
-			setState((){
-			  emailnotfound = false;
-			  wrongpassword = false;
-			  successful = false;
-			  verifyyouremail = false;
-			});
+			remove_errors_from_screen();
 			return "A password of length more than or equal to 12 is required";
 		      }
 		      else if(!validateStructure(value)){
-			setState((){
-			  emailnotfound = false;
-			  wrongpassword = false;
-			  successful = false;
-			  verifyyouremail = false;
-			});
+			remove_errors_from_screen();
 			return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
 		      }
 		    },
@@ -214,14 +191,26 @@ class _signinformState extends State<signinform>{
     );
   }
 
-  bool validateStructure(String value){ 
+  //All of the functions being used in the widget.
+
+  bool validateStructure(String value){ //This allows us to have the password condition as described above.
     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
 
-  get_context(BuildContext context){
-    check = Provider.of<Connection>(context);
+  remove_errors_from_screen(){
+    setState((){ 
+      emailnotfound = false;
+      wrongpassword = false;
+      successful = false;
+      verifyyouremail = false;
+    });
+  }
+
+  get_context(BuildContext context){ 
+    check = Provider.of<Connection_1>(context); //This is how you initiailize the variable that you will send to the receiver i.e. "MyApp".
+                                              //We create the variable outside the widget because it allows us to use it outside the widget.
   }
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -235,8 +224,8 @@ class _signinformState extends State<signinform>{
       );
     } on FirebaseAuthException catch (e) {
       bool flag = false;
-      if (e.code == 'user-not-found') {
-	setState((){
+      if (e.code == 'user-not-found') { //If errors are found, show them on screen.
+	setState((){ 
 	   emailnotfound = true;
 	   wrongpassword = false;
 	   successful = false;
@@ -251,9 +240,9 @@ class _signinformState extends State<signinform>{
 	});
       }
     }
-    if(flag){
-      if(!auth.currentUser.emailVerified){
-	auth.currentUser.sendEmailVerification();
+    if(flag){ //If no errors found, you still need to check if the email has been verified or not. 
+      if(!auth.currentUser.emailVerified){ //Check if email is verified.
+	auth.currentUser.sendEmailVerification(); //If not, send the verification email again.
 	setState((){
 	  emailnotfound = false;
 	  wrongpassword = false;
@@ -262,7 +251,9 @@ class _signinformState extends State<signinform>{
         });
       }
       else{
-	check.logged = true;
+	check.logged = true; //If everything is fine, send the value to "MyApp" to route to "userscreen". 
+	                     //You also need to call the getter created in "Connection_1" class in the variable created here 
+	                     //to send the value. You need to do the same to access it too in "MyApp".
       }
     }
   }
