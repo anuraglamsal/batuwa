@@ -12,6 +12,7 @@ class _signupformState extends State<signupform>{
   GlobalKey<FormState> formkey = GlobalKey<FormState>(); //Formkey is required for validators to work.
   bool validated = false;
   bool email_exists = false;
+  bool successful = false;
   TextEditingController emailController = new TextEditingController(); 
   TextEditingController passwordController = new TextEditingController(); 
   @override
@@ -56,21 +57,18 @@ class _signupformState extends State<signupform>{
 		    style: TextStyle(fontSize: 22, color: Colors.white,),
 		  )
 		),                                                            
-		SizedBox(height:10),
+		SizedBox(height:5),
 		Container(
 		  width: 330,
 		  child:TextFormField(
 		    controller: emailController,
 		    style: TextStyle(color: Colors.white),
 		    decoration: InputDecoration(
-		      enabledBorder: OutlineInputBorder(
-			borderSide: BorderSide(
-			  color:Colors.blueGrey[700],
-			),
+		      enabledBorder: UnderlineInputBorder(
+			borderSide: BorderSide(color: Colors.blueGrey[700]),
 		      ),
-		      border: OutlineInputBorder(),
-		      focusedBorder: OutlineInputBorder(
-			borderSide: const BorderSide(color: Colors.blueGrey, width: 2.0),	
+		      focusedBorder: UnderlineInputBorder(
+			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
 		      ),
 		    ),
 		    cursorColor: Colors.blueGrey,
@@ -88,7 +86,7 @@ class _signupformState extends State<signupform>{
 		    },
 		  ),
 		),
-		SizedBox(height: 10),
+		SizedBox(height: 15),
 		Container(
 		  alignment: Alignment.center,
 		  height: 50,
@@ -102,7 +100,7 @@ class _signupformState extends State<signupform>{
 		    style: TextStyle(fontSize: 22, color: Colors.white,),
 		  )
 		),
-		SizedBox(height: 10),
+		SizedBox(height: 5),
 		Container(
 		  width: 330,
 		  child: TextFormField(
@@ -110,14 +108,11 @@ class _signupformState extends State<signupform>{
 		    style: TextStyle(color: Colors.white),
 		    decoration: InputDecoration(
 		      errorMaxLines: 3,
-		      enabledBorder: OutlineInputBorder(
-			borderSide: BorderSide(
-			  color:Colors.blueGrey[700],
-			),
+		      enabledBorder: UnderlineInputBorder(
+			borderSide: BorderSide(color: Colors.blueGrey[700]),
 		      ),
-		      border: OutlineInputBorder(),
-		      focusedBorder: OutlineInputBorder(
-			borderSide: const BorderSide(color: Colors.blueGrey, width: 2.0),	
+		      focusedBorder: UnderlineInputBorder(
+			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
 		      ),
 		    ),
 		    cursorColor: Colors.blueGrey,
@@ -139,24 +134,33 @@ class _signupformState extends State<signupform>{
 		  ),
 		),
 		SizedBox(height: 15),
-		Container(
-		  height: 42, 
-		  child: RaisedButton(
-		    color: Colors.blueGrey[700],
-		    onPressed: () {
-		      if(formkey.currentState.validate()){ 
-			registerNewUser(emailController.text, passwordController.text);
-		      }
-		    },
-		    child: Text(
-		      "Sign Up",
-		      style: TextStyle(fontSize: 18, color: Colors.white),
+		successful ?
+		    CircularProgressIndicator(
+		      valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
+		    ) :
+		    Container(
+		      height: 42, 
+		      child: RaisedButton(
+			color: Colors.blueGrey[700],
+			onPressed: () {
+			  if(formkey.currentState.validate()){ 
+			    setState((){
+			      successful = true;
+			      email_exists = false;
+			      validated = false;
+			    });
+			    registerNewUser(emailController.text, passwordController.text);
+			  }
+			},
+			child: Text(
+			  "Sign Up",
+			  style: TextStyle(fontSize: 18, color: Colors.white),
+			),
+			shape: RoundedRectangleBorder(
+			  borderRadius: BorderRadius.circular(10.0),
+			),
+		      ),
 		    ),
-		    shape: RoundedRectangleBorder(
-		      borderRadius: BorderRadius.circular(10.0),
-		    ),
-		  ),
-		),
 		SizedBox(height:20),
 		validated ? Text("Successful validation! Please verify your email address, which is a one time process, by going to your email inbox.",
 		  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
@@ -180,6 +184,7 @@ class _signupformState extends State<signupform>{
     setState((){ 
       validated = false;
       email_exists = false;
+      successful = false;
     });
   }
 
@@ -197,6 +202,7 @@ class _signupformState extends State<signupform>{
 	flag = false;
 	setState((){
 	  validated = false;
+	  successful = false;
 	  email_exists = true;
 	});
       }
@@ -208,6 +214,7 @@ class _signupformState extends State<signupform>{
       setState((){
 	email_exists = false;
 	validated = true;
+	successful = false;
       });
     }
   }

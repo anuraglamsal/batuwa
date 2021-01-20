@@ -65,21 +65,18 @@ class _signinformState extends State<signinform>{
 		    style: TextStyle(fontSize: 22, color: Colors.white,),
 		  )
 		),                                                            
-		SizedBox(height:10),
+		SizedBox(height:5),
 		Container(
 		  width: 330,
 		  child:TextFormField(
 		    controller: emailController, 
 		    style: TextStyle(color: Colors.white),
 		    decoration: InputDecoration(
-		      enabledBorder: OutlineInputBorder(
-			borderSide: BorderSide(
-			  color:Colors.blueGrey[700],
-			),
+		      enabledBorder: UnderlineInputBorder(
+			borderSide: BorderSide(color: Colors.blueGrey[700]),
 		      ),
-		      border: OutlineInputBorder(),
-		      focusedBorder: OutlineInputBorder(
-			borderSide: const BorderSide(color: Colors.blueGrey, width: 2.0),	
+		      focusedBorder: UnderlineInputBorder(
+			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
 		      ),
 		    ),
 		    cursorColor: Colors.blueGrey,
@@ -97,7 +94,7 @@ class _signinformState extends State<signinform>{
 		    },
 		  ),
 		),
-		SizedBox(height: 10),
+		SizedBox(height: 15),
 		Container(
 		  alignment: Alignment.center,
 		  height: 50,
@@ -111,7 +108,7 @@ class _signinformState extends State<signinform>{
 		    style: TextStyle(fontSize: 22, color: Colors.white,),
 		  )
 		),
-		SizedBox(height: 10),
+		SizedBox(height: 5),
 		Container(
 		  width: 330,
 		  child: TextFormField(
@@ -119,14 +116,11 @@ class _signinformState extends State<signinform>{
 		    style: TextStyle(color: Colors.white),
 		    decoration: InputDecoration(
 		      errorMaxLines: 3,
-		      enabledBorder: OutlineInputBorder(
-			borderSide: BorderSide(
-			  color:Colors.blueGrey[700],
-			),
+		      enabledBorder: UnderlineInputBorder(
+			borderSide: BorderSide(color: Colors.blueGrey[700]),
 		      ),
-		      border: OutlineInputBorder(),
-		      focusedBorder: OutlineInputBorder(
-			borderSide: const BorderSide(color: Colors.blueGrey, width: 2.0),	
+		      focusedBorder: UnderlineInputBorder(
+			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
 		      ),
 		    ),
 		    cursorColor: Colors.blueGrey,
@@ -155,33 +149,44 @@ class _signinformState extends State<signinform>{
 		  },
 		),
 		SizedBox(height: 15),
-		Container(
-		  height: 42, 
-		  child: RaisedButton(
-		    color: Colors.blueGrey[700],
-		    onPressed: () {
-		      if(formkey.currentState.validate()){  
-			signinUser(emailController.text, passwordController.text);
-		      }
-		    },
-		    child: Text(
-		      "Sign In",
-		      style: TextStyle(fontSize: 18, color: Colors.white),
+		successful ?
+		    CircularProgressIndicator(
+		      valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
+		    ) :
+		    Container(
+		      height: 42, 
+		      child: RaisedButton(
+			color: Colors.blueGrey[700],
+			onPressed: () {
+			  if(formkey.currentState.validate()){  
+			    setState((){ //Whenever you press sign-in and if the normal validation is successful, then a loading circle
+			                 //is shown on screen rather than the sign in button.
+			      successful = true;
+			      emailnotfound = false;
+			      wrongpassword = false;
+			      verifyyouremail = false;
+			    });
+			    signinUser(emailController.text, passwordController.text);
+			  }
+			},
+			child: Text(
+			  "Sign In",
+			  style: TextStyle(fontSize: 18, color: Colors.white),
+			),
+			shape: RoundedRectangleBorder(
+			  borderRadius: BorderRadius.circular(10.0),
+			),
+		      ),
 		    ),
-		    shape: RoundedRectangleBorder(
-		      borderRadius: BorderRadius.circular(10.0),
-		    ),
-		  ),
-		),
-		SizedBox(height:20),
-		emailnotfound ?
-		    Text("The email entered doesn't exist in the database.",
-		         style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
-		wrongpassword ?
-		    Text("The password entered is wrong.",
-		         style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
-                verifyyouremail ?
-		    Text("Email verification not completed.",
+		    SizedBox(height:20),
+		    emailnotfound ?
+			Text("The email entered doesn't exist in the database.",
+			  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+		    wrongpassword ?
+			Text("The password entered is wrong.",
+			  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+		    verifyyouremail ?
+			Text("Email verification not completed.",
 		         style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
               ]
             )
@@ -268,3 +273,5 @@ class _signinformState extends State<signinform>{
   }
 
 } 
+
+
