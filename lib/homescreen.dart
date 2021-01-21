@@ -21,15 +21,18 @@ class _homeState extends State<home>{
 	  alignment: Alignment.center,
 	  child: Text(
 	    "batuwa",
+	    style: TextStyle(
+	      fontFamily: 'Mohave',
+	    ),
 	  ),
 	),
-	backgroundColor: Colors.blueGrey[800],
+	backgroundColor: Color(0xff252a42),
       ),
       body: tabs[_currentIndex], //This allows for "tabs" above to work. 
       bottomNavigationBar: BottomNavigationBar(
 	currentIndex : _currentIndex, //The value of the "_currentindex" variable provided here controls what tab is opened. '0' is the leftmost 
 	                              //tab and it goes one more to the right as you increase '1' and so on similarly.
-	backgroundColor: Colors.blueGrey[800],
+	backgroundColor: Color(0xff252a42),
 	selectedItemColor: Colors.white,
 	unselectedItemColor: Colors.grey,
 	items: [ //These are the items in the bottom navigation bar. 

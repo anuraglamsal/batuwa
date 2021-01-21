@@ -23,7 +23,7 @@ class _signupformState extends State<signupform>{
 	  key: formkey, 
 	  child: Container(
 	    alignment: Alignment.center, 
-	    color: Colors.black87,
+	    color: Color(0xff0e0f26),
 	    child: Column(
 	      mainAxisAlignment: MainAxisAlignment.start, 
 	      children: <Widget>[
@@ -35,12 +35,12 @@ class _signupformState extends State<signupform>{
 		  width: 350,
 		  alignment: Alignment.center,
 		  decoration: BoxDecoration(
-		    color: Colors.blueGrey[700],
+		    color: Color(0xff2c334f),
 		    borderRadius: BorderRadius.all(Radius.circular(15)),
 		  ),
 		  child: Text(
 		    "Create your account here",
-		    style: TextStyle(fontSize: 26, color: Colors.white),
+		    style: TextStyle(fontSize: 28, color: Colors.white, fontFamily: 'Mohave',),
 		  ),
 		),
 		SizedBox(height: 17),
@@ -49,12 +49,12 @@ class _signupformState extends State<signupform>{
 		  height: 50,
 		  width: 330,
 		  decoration: BoxDecoration(
-		    color: Colors.blueGrey[800],
+		    color: Color(0xff252a42),
 		    borderRadius: BorderRadius.all(Radius.circular(20)),
 		  ),
 		  child: Text(
 		    "E-mail",
-		    style: TextStyle(fontSize: 22, color: Colors.white,),
+		    style: TextStyle(fontSize: 19.5, color: Colors.white, fontFamily: 'Mohave'),
 		  )
 		),                                                            
 		SizedBox(height:5),
@@ -65,7 +65,7 @@ class _signupformState extends State<signupform>{
 		    style: TextStyle(color: Colors.white),
 		    decoration: InputDecoration(
 		      enabledBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Colors.blueGrey[700]),
+			borderSide: BorderSide(color: Color(0xff434a66)),
 		      ),
 		      focusedBorder: UnderlineInputBorder(
 			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
@@ -92,12 +92,12 @@ class _signupformState extends State<signupform>{
 		  height: 50,
 		  width: 330,
 		  decoration: BoxDecoration(
-		    color: Colors.blueGrey[800],
+		    color: Color(0xff252a42),
 		    borderRadius: BorderRadius.all(Radius.circular(20)),
 		  ),
 		  child: Text(
 		    "Password",
-		    style: TextStyle(fontSize: 22, color: Colors.white,),
+		    style: TextStyle(fontSize: 20, color: Colors.white, fontFamily: 'Mohave'),
 		  )
 		),
 		SizedBox(height: 5),
@@ -109,7 +109,7 @@ class _signupformState extends State<signupform>{
 		    decoration: InputDecoration(
 		      errorMaxLines: 3,
 		      enabledBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Colors.blueGrey[700]),
+			borderSide: BorderSide(color: Color(0xff434a66)),
 		      ),
 		      focusedBorder: UnderlineInputBorder(
 			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
@@ -141,7 +141,7 @@ class _signupformState extends State<signupform>{
 		    Container(
 		      height: 42, 
 		      child: RaisedButton(
-			color: Colors.blueGrey[700],
+			color: Color(0xff2c334f),
 			onPressed: () {
 			  if(formkey.currentState.validate()){ 
 			    setState((){
@@ -154,7 +154,7 @@ class _signupformState extends State<signupform>{
 			},
 			child: Text(
 			  "Sign Up",
-			  style: TextStyle(fontSize: 18, color: Colors.white),
+			  style: TextStyle(fontSize: 18.7, color: Colors.white, fontFamily: 'Mohave',),
 			),
 			shape: RoundedRectangleBorder(
 			  borderRadius: BorderRadius.circular(10.0),
