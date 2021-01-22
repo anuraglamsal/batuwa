@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'connection.dart';
+import 'forgotpassword.dart';
 
 class signinform extends StatefulWidget{ //Needs to be stateful because we show messages based on errors of sign in.
   @override
@@ -145,7 +146,10 @@ class _signinformState extends State<signinform>{
 		GestureDetector(
 		  child: Text("Forgot your password?", style: TextStyle(fontSize: 15, color: Colors.lightBlue)),
 		  onTap: (){
-		    _launchURL();
+		    Navigator.push(
+		      context, 
+		      MaterialPageRoute(builder: (context) => ForgotPassword()),
+		    );
 		  },
 		),
 		SizedBox(height: 15),

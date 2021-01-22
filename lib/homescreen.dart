@@ -38,12 +38,12 @@ class _homeState extends State<home>{
 	items: [ //These are the items in the bottom navigation bar. 
 	  BottomNavigationBarItem(
 	    icon: Icon(Icons.add_box_rounded),
-	    title: Text('Sign Up'),
+	    title: Text('Sign Up', style: TextStyle(fontFamily: 'Mohave',)),
 	    backgroundColor: Colors.blue,
 	  ),
 	  BottomNavigationBarItem(
 	    icon: Icon(Icons.account_box_rounded),
-	    title: Text('Sign In'),
+	    title: Text('Sign In', style: TextStyle(fontFamily: 'Mohave',)),
 	    backgroundColor: Colors.blue,
 	  ),
 	],
