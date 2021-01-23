@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart'; 
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ForgotPassword extends StatefulWidget{
   @override
@@ -9,6 +10,8 @@ class ForgotPassword extends StatefulWidget{
 class _ForgotPasswordState extends State<ForgotPassword>{
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   TextEditingController emailController = new TextEditingController();
+  bool success = false;
+  bool failure = false;
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -30,8 +33,9 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 	  alignment: Alignment.center,
 	  color: Color(0xff0e0f26),
 	  child: Column(
-	    mainAxisAlignment: MainAxisAlignment.center,
+	    mainAxisAlignment: MainAxisAlignment.start,
 	    children: <Widget>[
+	      SizedBox(height: 20),
 	      Container(
 		height: 90,
 		width: 390,
@@ -47,7 +51,7 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 		),
 	      ),
 	      Container(
-		width: 330,
+         	width: 330,
 		child:TextFormField(
 		  controller: emailController, 
 		  style: TextStyle(color: Colors.white),
@@ -79,7 +83,7 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 		  color: Color(0xff2c334f),
 		  onPressed: () {
 		    if(formkey.currentState.validate()){  
-		      //Call the function
+		      resetPassword(emailController.text);
 		    }
 		  },
 		  child: Text(
@@ -91,11 +95,40 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 		  ),
 		),
 	      ),
+	      success ?
+		  Text("Please check your inbox.", textAlign: TextAlign.center,) : SizedBox(),
+	      failure ? 
+		  Text("This e-mail doesn't exist in the database.", textAlign: TextAlign.center,) : SizedBox(),
 	    ],
 	  ),
 	),
       ),
     );
   }
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  Future<void> resetPassword(email) async{
+    bool flag = true;
+    try{
+      final user = await auth.sendPasswordResetEmail(email: email);
+    }
+    on FirebaseAuthException catch (e){
+      flag = false;
+      if (e.code == 'user-not-found'){
+	setState((){
+	  success = false;
+	  failure = true;
+        });
+      }
+    }
+    if(flag){
+      setState((){
+	success = true;
+	failure = false;
+      });
+    }
+  }
+
 }
 

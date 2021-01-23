@@ -144,7 +144,7 @@ class _signinformState extends State<signinform>{
 		),
 		SizedBox(height: 15),
 		GestureDetector(
-		  child: Text("Forgot your password?", style: TextStyle(fontSize: 15, color: Colors.lightBlue)),
+		  child: Text("Forgot your password?", style: TextStyle(fontSize: 15, color: Colors.lightBlue, fontFamily: 'Mohave',)),
 		  onTap: (){
 		    Navigator.push(
 		      context, 
