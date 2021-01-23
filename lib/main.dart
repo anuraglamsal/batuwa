@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'homescreen.dart';
 import 'userscreen.dart';
 import 'connection.dart';
-import 'null_check.dart';
+import 'null_check.dart'; //YEP
 
 Future<void> main() async{ //You need to initialize the "main" function in this particular manner for Firebase to be initialized.
   WidgetsFlutterBinding.ensureInitialized();//Required to initialize Firebase.
