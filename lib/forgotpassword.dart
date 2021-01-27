@@ -9,9 +9,10 @@ class ForgotPassword extends StatefulWidget{
 
 class _ForgotPasswordState extends State<ForgotPassword>{
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  TextEditingController emailController = new TextEditingController();
   bool success = false;
   bool failure = false;
+  bool circle = false;
+  TextEditingController emailController = new TextEditingController();
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -66,10 +67,12 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 		  cursorColor: Colors.blueGrey,
 		  validator: (value){  
 		    if(value.isEmpty){
+		      remove_all_errors();
 		      return "Required"; 
 		    }
 		    else{
 		      if(!EmailValidator.validate(value)){
+			remove_all_errors();
 			return "Not a valid email";
 		      }
 		    }
@@ -77,28 +80,40 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 		),
 	      ),
 	      SizedBox(height: 15),
-	      Container(
-		height: 42, 
-		child: RaisedButton(
-		  color: Color(0xff2c334f),
-		  onPressed: () {
-		    if(formkey.currentState.validate()){  
-		      resetPassword(emailController.text);
-		    }
-		  },
-		  child: Text(
-		    "Send",
-		    style: TextStyle(fontSize: 18.7, color: Colors.white, fontFamily: 'Mohave'),
+	      circle ?
+		  CircularProgressIndicator(
+		    valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
+		  ) :
+		  Container(
+		    height: 42, 
+		    child: RaisedButton(
+		      color: Color(0xff2c334f),
+		      onPressed: () {
+			if(formkey.currentState.validate()){  
+			  setState((){
+			    circle = true;
+			    success = false;
+			    failure = false;
+			  });
+			  resetPassword(emailController.text);
+			}
+		      },
+		      child: Text(
+			"Send",
+			style: TextStyle(fontSize: 18.7, color: Colors.white, fontFamily: 'Mohave'),
+		      ),
+		      shape: RoundedRectangleBorder(
+			borderRadius: BorderRadius.circular(10.0),
+		      ),
+		    ),
 		  ),
-		  shape: RoundedRectangleBorder(
-		    borderRadius: BorderRadius.circular(10.0),
-		  ),
-		),
-	      ),
+              SizedBox(height: 15),
 	      success ?
-		  Text("Please check your inbox.", textAlign: TextAlign.center,) : SizedBox(),
+		  Text("Please check your inbox.", style: TextStyle(fontSize: 17, color: Colors.blue[100], fontFamily: 'Mohave',),) : SizedBox(),
 	      failure ? 
-		  Text("This e-mail doesn't exist in the database.", textAlign: TextAlign.center,) : SizedBox(),
+		  Text("This e-mail doesn't exist in the database.", style: TextStyle(fontSize: 17, color: Colors.red[400], fontFamily: 'Mohave',), 
+		    textAlign: TextAlign.center,)
+		  : SizedBox(),
 	    ],
 	  ),
 	),
@@ -106,12 +121,20 @@ class _ForgotPasswordState extends State<ForgotPassword>{
     );
   }
 
+  remove_all_errors(){
+    setState((){
+      success = false;
+      failure = false;
+      circle= false;
+    });
+  }
+
   FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<void> resetPassword(email) async{
     bool flag = true;
     try{
-      final user = await auth.sendPasswordResetEmail(email: email);
+      await auth.sendPasswordResetEmail(email: email);
     }
     on FirebaseAuthException catch (e){
       flag = false;
@@ -119,6 +142,7 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 	setState((){
 	  success = false;
 	  failure = true;
+	  circle = false;
         });
       }
     }
@@ -126,9 +150,13 @@ class _ForgotPasswordState extends State<ForgotPassword>{
       setState((){
 	success = true;
 	failure = false;
+	circle = false;
       });
     }
   }
 
 }
+
+
+
 

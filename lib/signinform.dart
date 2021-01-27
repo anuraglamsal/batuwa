@@ -185,13 +185,13 @@ class _signinformState extends State<signinform>{
 		    SizedBox(height:20),
 		    emailnotfound ?
 			Text("The email entered doesn't exist in the database.",
-			  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+			  style: TextStyle(fontSize:17, color: Colors.red[400], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
 		    wrongpassword ?
 			Text("The password entered is wrong.",
-			  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+			  style: TextStyle(fontSize:17, color: Colors.red[400], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
 		    verifyyouremail ?
 			Text("Email verification not completed.",
-		         style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+		         style: TextStyle(fontSize:17, color: Colors.red[400], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
               ]
             )
           )
@@ -277,5 +277,3 @@ class _signinformState extends State<signinform>{
   }
 
 } 
-
-

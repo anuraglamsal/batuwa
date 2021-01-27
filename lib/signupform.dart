@@ -97,7 +97,7 @@ class _signupformState extends State<signupform>{
 		  ),
 		  child: Text(
 		    "Password",
-		    style: TextStyle(fontSize: 20, color: Colors.white, fontFamily: 'Mohave'),
+		    style: TextStyle(fontSize: 19.5, color: Colors.white, fontFamily: 'Mohave'),
 		  )
 		),
 		SizedBox(height: 5),
@@ -162,10 +162,10 @@ class _signupformState extends State<signupform>{
 		      ),
 		    ),
 		SizedBox(height:20),
-		validated ? Text("Successful validation! Please verify your email address, which is a one time process, by going to your email inbox.",
-		  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+		validated ? Text("Successful! Please verify your email address, which is a one time process, by going to your email inbox.",
+		  style: TextStyle(fontSize:17, color: Colors.blue[100], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
 		email_exists ? Text("User with that e-mail already exists",
-		  style: TextStyle(fontSize:17, color: Colors.white), textAlign: TextAlign.center,):SizedBox(),
+		  style: TextStyle(fontSize:17, color: Colors.red[500], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
 	      ]
 	    )
 	  )
