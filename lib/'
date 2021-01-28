@@ -21,8 +21,7 @@ class userscreen extends StatelessWidget{
 	child: Column(
 	  mainAxisAlignment: MainAxisAlignment.start,
 	  children: <Widget>[
-	    SizedBox(height: 50),
-	    Image.asset('assets/images/logo.png', width: 300, height: 150),
+	    SizedBox(height: 150),
 	    Container(
 	      height: 70,
 	      width: 300,
@@ -48,24 +47,6 @@ class userscreen extends StatelessWidget{
 		"Start posting right away", style: TextStyle(color: Colors.white, fontFamily: 'Mohave', fontSize: 22,),
 	      ),
 	    ),
-	    SizedBox(height: 17),
-	    Text(
-	      "or", style: TextStyle(fontSize: 17, color: Colors.white),
-	    ),
-	    SizedBox(height: 17),
-	    Container(
-	      height: 50,
-	      width: 250,
-	      alignment: Alignment.center,
-	      decoration: BoxDecoration(
-		color: Colors.blue[600],
-		borderRadius: BorderRadius.all(Radius.circular(15)),
-	      ),
-	      child: Text(
-		"Customize your account", style: TextStyle(color: Colors.white, fontFamily: 'Mohave', fontSize: 22,),
-	      ),
-	    ),
-	    SizedBox(height: 200),
 	    RaisedButton(
 	      child: Text(
 		'Logout',
