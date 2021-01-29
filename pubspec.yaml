@@ -24,14 +24,15 @@ dependencies:
   flutter:
     sdk: flutter
   email_validator: '^1.0.5'
-  firebase_core: ^0.5.3
-  firebase_auth: ^0.18.4+1
-  firebase_dynamic_links: ^0.5.1
-  firebase_analytics: ^6.3.0
+  firebase_core: ^0.7.0
+  firebase_auth: ^0.20.0+1
+  #firebase_dynamic_links: ^0.5.1
+  #firebase_analytics: ^6.3.0
   regexed_validator: ^1.0.4
   flutter_keyboard_visibility: ^4.0.2
   url_launcher: ^5.7.10 
   provider: ^4.3.2+4
+  cloud_firestore: ^0.16.0
   
 
   # The following adds the Cupertino Icons font to your application.
