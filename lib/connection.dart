@@ -11,3 +11,12 @@ class Connection_1 with ChangeNotifier{
     notifyListeners();
   }
 }
+
+class Connection_2 with ChangeNotifier{
+  bool _clicked = false;
+  bool get clicked => _clicked;
+  set clicked(bool val){
+    _clicked = val;
+    notifyListeners();
+  }
+}

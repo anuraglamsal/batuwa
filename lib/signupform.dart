@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'cloud.dart';
 
 class signupform extends StatefulWidget{//Needs to be stateful to show errors.
   @override
@@ -209,6 +210,7 @@ class _signupformState extends State<signupform>{
     }
     if(flag == true){
       auth.currentUser.sendEmailVerification();
+      firsttimelogin(1);
       await auth.signOut(); //Need to do this because users persist in sign up too. Thus, if the app is restarted, the user's account is opened,
       //and not the home screen.
       setState((){
