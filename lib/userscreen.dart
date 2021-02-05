@@ -5,38 +5,10 @@ import 'cloud.dart';
 import 'connection.dart';
 import 'null_check.dart';
 
-class userscreen extends StatelessWidget{
+/*class userscreen extends StatelessWidget{
   @override
-  Widget build(BuildContext context){
-    Future.delayed(const Duration(milliseconds: 500), (){ 
-      check();
-    });
-    return ChangeNotifierProvider(
-      create: (_) => new Connection_2(),
-      child: Consumer<Connection_2>(
-	builder: (context, click, _) => Scaffold(
-	  appBar: AppBar(
-	    title: Center(
-	      child: Text("batuwa", style: TextStyle(fontFamily: 'Mohave',),),
-	    ),
-	    backgroundColor: Color(0xff252a42),
-	  ),
-	  body: Container(
-	    alignment: Alignment.center,
-	    color: Color(0xff0e0f26),
-	    child: Column(
-	      mainAxisAlignment: MainAxisAlignment.start,
-	      children: <Widget>[
-		(result.data()["token"] == 1 && !click.clicked) ? firsttimeLogin() : normalscreen(),
-	      ],
-	    ),
-	  ),
-	),
-      ),
-    );
-  }
-}
 
+  
 class firsttimeLogin extends StatefulWidget{
   @override
   _firsttimeLoginState createState() => _firsttimeLoginState();
@@ -78,7 +50,6 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
 	  ),
 	  onTap: (){
 	    update_token();
-	    click.clicked = true;
 	  },
 	),
 	SizedBox(height: 17),
@@ -101,7 +72,7 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
       ],
     );
   }
-}
+}*/
 
 class normalscreen extends StatefulWidget{
   @override
@@ -111,7 +82,7 @@ class normalscreen extends StatefulWidget{
 class _normalscreenState extends State<normalscreen>{
   @override
   Widget build(BuildContext context){
-    final check = Provider.of<Connection_1>(context);//We are also connecting this widget to "MyApp". You have to use the same variable firsttimelogin11xx.
+    //final check = Provider.of<Connection_1>(context);//We are also connecting this widget to "MyApp". You have to use the same variable firsttimelogin11xx.
     return Column(
       children: <Widget>[
 	SizedBox(height: 20),
@@ -121,9 +92,9 @@ class _normalscreenState extends State<normalscreen>{
 	  ),
 	  onPressed:(){
 	    logout();
-	    Future.delayed(const Duration(milliseconds: 500), (){ //This is because we encounter syncing problems as signing out takes a bit of time.
+	    /*Future.delayed(const Duration(milliseconds: 500), (){ //This is because we encounter syncing problems as signing out takes a bit of time.
 	      check.logged = false;
-	    });
+	    });*/
 	  }
 	)
       ],

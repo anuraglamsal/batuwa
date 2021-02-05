@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'homescreen.dart';
 import 'userscreen.dart';
 import 'connection.dart';
@@ -12,7 +13,7 @@ Future<void> main() async{ //You need to initialize the "main" function in this 
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget{
+/*class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return ChangeNotifierProvider( //This allows for "MyApp" to get values sent from "signinform" through "Connection_1" in real-time.
@@ -25,6 +26,27 @@ class MyApp extends StatelessWidget{
 	                                                               //and newly logged in.
 	),
       ),
+    );
+  }
+}*/
+
+class MyApp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return StreamBuilder(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot){
+	if(snapshot.connectionState == ConnectionState.waiting){
+	  return Text("YEP");
+        }
+	else{
+	  print(snapshot.data);
+	  return MaterialApp(
+	    title: 'app',
+	    home: (snapshot.data != null && snapshot.data.emailVerified) ? normalscreen() : home(),
+	  );
+        }
+      },
     );
   }
 }
