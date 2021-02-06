@@ -252,6 +252,7 @@ class _signinformState extends State<signinform>{
     if(flag){ //If no errors found, you still need to check if the email has been verified or not. 
       if(!auth.currentUser.emailVerified){ //Check if email is verified.
 	auth.currentUser.sendEmailVerification(); //If not, send the verification email again.
+	await auth.signOut();
 	setState((){
 	  emailnotfound = false;
 	  wrongpassword = false;

@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget{
 	  print(snapshot.data);
 	  return MaterialApp(
 	    title: 'app',
-	    home: (snapshot.data != null && snapshot.data.emailVerified) ? normalscreen() : home(),
+	    home: (snapshot.data != null && snapshot.data.emailVerified) ? userscreen() : home(),
 	  );
         }
       },

@@ -8,14 +8,12 @@ Future<void> firsttimelogin(int token) async{
   });
 }
 
-var result;
-var firebaseUser = FirebaseAuth.instance.currentUser;
 final firestoreInstance = FirebaseFirestore.instance;
 
 void update_token(){
   firestoreInstance
       .collection("token")
-      .doc(firebaseUser.uid)
+      .doc(FirebaseAuth.instance.currentUser.uid)
       .update({"token": 0}).then((_){
 	print("Success!");
       });

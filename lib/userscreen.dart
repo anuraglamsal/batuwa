@@ -1,12 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'cloud.dart';
 import 'connection.dart';
 import 'null_check.dart';
 
-/*class userscreen extends StatelessWidget{
+class userscreen extends StatelessWidget{
   @override
+  Widget build(BuildContext build){
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('token').doc(FirebaseAuth.instance.currentUser.uid).snapshots(),
+      builder: (context, snapshot){
+	if(snapshot.connectionState == ConnectionState.waiting){
+	  return Container();
+        }
+	else{
+	  print(snapshot.data['token']);
+	  /*if(snapshot.data['token'] == 1){
+	    return firsttimeLogin();
+	  }
+	  else{
+	    return normalscreen();
+	  }*/
+	  return Scaffold(
+	    appBar: AppBar(
+	      title: Center(child: Text("batuwa", style: TextStyle(fontFamily: 'Mohave',))),
+	      backgroundColor: Color(0xff252a42),
+	    ),
+	    body: Container(
+	      alignment: Alignment.center,
+	      color: Color(0xff0e0f26),
+	      child:(snapshot.data['token'] == 1) ? firsttimeLogin() : normalscreen(),
+	    ),
+	  );
+        }
+      },
+    );
+  }
+}
 
   
 class firsttimeLogin extends StatefulWidget{
@@ -17,7 +49,6 @@ class firsttimeLogin extends StatefulWidget{
 class _firsttimeLoginState extends State<firsttimeLogin>{
   @override
   Widget build(BuildContext context){
-    final click = Provider.of<Connection_2>(context);
     return Column(
       children: <Widget>[
 	SizedBox(height: 50),
@@ -72,7 +103,7 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
       ],
     );
   }
-}*/
+}
 
 class normalscreen extends StatefulWidget{
   @override
