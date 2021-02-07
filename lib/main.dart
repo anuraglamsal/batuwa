@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget{
 	  return Text("YEP");
         }
 	else{
-	  print(snapshot.data);
 	  return MaterialApp(
 	    title: 'app',
 	    home: (snapshot.data != null && snapshot.data.emailVerified) ? userscreen() : home(),
