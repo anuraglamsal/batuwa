@@ -131,6 +131,9 @@ class _normalscreenState extends State<normalscreen>{
       ],
     );
   }
+  Future<void> logout() async{ //Signs the user out.
+    await auth.signOut();
+  }
 }
 
 

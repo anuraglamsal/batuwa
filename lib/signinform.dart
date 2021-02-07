@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:url_launcher/url_launcher.dart';
-//import 'package:provider/provider.dart';
-import 'connection.dart';
 import 'forgotpassword.dart';
 
 class signinform extends StatefulWidget{ //Needs to be stateful because we show messages based on errors of sign in.
@@ -13,7 +10,6 @@ class signinform extends StatefulWidget{ //Needs to be stateful because we show 
 } 
 
 class _signinformState extends State<signinform>{
-  //var check; //The variable that is passed on to the connected widget i.e. "MyApp" in this case.
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool emailnotfound = false; //These booleans are used to show error messages.
   bool wrongpassword = false;
@@ -23,7 +19,6 @@ class _signinformState extends State<signinform>{
   TextEditingController passwordController = new TextEditingController(); 
   @override
   Widget build(BuildContext context){
-    //get_context(context); //You need to send the context of the value sending widget to be connected to the receiving one. 
     return KeyboardVisibilityBuilder( //Detects if there is keyboard on the screen. This allows us to do stuff depending upon keyboard being on 
                                       //screen or not without using "setState" which is pretty neat.
       builder: (context, isKeyboardVisible){
@@ -217,11 +212,6 @@ class _signinformState extends State<signinform>{
     });
   }
 
-  /*get_context(BuildContext context){ 
-    check = Provider.of<Connection_1>(context); //This is how you initiailize the variable that you will send to the receiver i.e. "MyApp".
-                                              //We create the variable outside the widget because it allows us to use it outside the widget.
-  }*/
-
   FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<void> signinUser(email, password) async{
@@ -260,20 +250,6 @@ class _signinformState extends State<signinform>{
 	  verifyyouremail = true;
         });
       }
-      else{
-	//check.logged = true; //If everything is fine, send the value to "MyApp" to route to "userscreen". 
-	                     //You also need to call the getter created in "Connection_1" class in the variable created here 
-	                     //to send the value. You need to do the same to access it too in "MyApp".
-      }
-    }
-  }
-
-  void _launchURL() async {
-    const url = 'https://google.com';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
     }
   }
 
