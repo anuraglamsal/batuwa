@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong/latlong.dart';
 
 class normalscreen extends StatefulWidget{
   @override
@@ -12,22 +14,50 @@ class _normalscreenState extends State<normalscreen>{
   Widget build(BuildContext context){
     return Column(
       children: <Widget>[
-	SizedBox(height: 200),
-	RaisedButton(
-	  child: Text(
-	    'Logout',
-	  ),
-	  onPressed:(){
-	    logout();
-	  }
-	)
+	SizedBox(height: 100),
+	Row(
+	  mainAxisAlignment: MainAxisAlignment.center,
+	  children: [
+	    Container(
+	      width: 60,
+	      height: 60,
+	      decoration: BoxDecoration(
+		color: Colors.orange,
+		shape: BoxShape.circle,
+	      ),
+	    ),
+	    SizedBox(width: 50),
+	    Container(
+	      height: 100,
+	      width: 200,
+	      child: ElevatedButton(
+		child: Text("EMBARK",),
+		onPressed: (){
+		  Navigator.push(
+		    context,
+		    MaterialPageRoute(builder: (context) => Embark()),
+		  );
+		},
+	      ),
+	    ),
+	  ],
+	),
+	SizedBox(height: 400),
       ],
     );
   }
-
-  Future<void> logout() async{ //Signs the user out.
-    await FirebaseAuth.instance.signOut();
-  }
-
 }
+
+class Embark extends StatefulWidget{
+  @override
+  _EmbarkState createState() => _EmbarkState();
+}
+
+class _EmbarkState extends State<Embark>{
+  @override
+  Widget build(BuildContext context){
+    return Text("YEP",);
+  }
+}
+
 

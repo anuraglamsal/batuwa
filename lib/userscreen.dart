@@ -30,7 +30,25 @@ class userscreen extends StatelessWidget{
 	  else{
 	    return Scaffold(
 	      drawer: Drawer(
-		child: ListView(
+		child: Container(
+		  color: Color(0xff0e0f26),
+		  child: ListView(
+		    padding: EdgeInsets.zero,
+		    children: [
+		      SizedBox(height: 200),
+		      ListTile(
+			leading: Icon(
+			  Icons.logout,
+			  color: Colors.white,
+			),
+			selected: true,
+			title: Text("Logout", style: TextStyle(fontFamily: "Mohave", fontSize: 23, color: Colors.white),),
+			onTap:(){
+			  logout();
+			},
+		      ),
+		    ],
+		  ),
 		),
 	      ),
 	      appBar: AppBar(
@@ -48,4 +66,9 @@ class userscreen extends StatelessWidget{
       },
     );
   }
+
+  Future<void> logout() async{ //Signs the user out.
+    await FirebaseAuth.instance.signOut();
+  }
+
 }
