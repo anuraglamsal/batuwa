@@ -58,11 +58,11 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
 	      borderRadius: BorderRadius.all(Radius.circular(15)),
 	    ),
 	    child: Text(
-	      "Customize your account", style: TextStyle(color: Colors.white, fontFamily: 'Mohave', fontSize: 22,),
+	      "Customize your profile", style: TextStyle(color: Colors.white, fontFamily: 'Mohave', fontSize: 22,),
 	    ),
 	  ),
 	  onTap: (){
-	    update_token();
+	    update_token_2();
 	  },
 	),
       ],

@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firsttimelogin.dart';
 import 'normalscreen.dart';
+import 'customizescreen.dart';
+import 'cloud.dart';
 
 class userscreen extends StatelessWidget{
   @override
@@ -12,63 +14,27 @@ class userscreen extends StatelessWidget{
       builder: (context, snapshot){
 	if(snapshot.connectionState == ConnectionState.waiting){
 	  return Container(color: Color(0xff0e0f26),);
-        }
-	else{
-	  if(snapshot.data['token'] == 1){
-	    return Scaffold(
-	      appBar: AppBar(
-		title: Center(child: Text("batuwa", style: TextStyle(fontFamily: 'Mohave',))),
-		backgroundColor: Color(0xff252a42),
-	      ),
-	      body: Container(
-		alignment: Alignment.center,
-		color: Color(0xff0e0f26),
-		child: firsttimeLogin(),
-	      ),
-	    );
-	  }
-	  else{
-	    return Scaffold(
-	      drawer: Drawer(
-		child: Container(
-		  color: Color(0xff0e0f26),
-		  child: ListView(
-		    padding: EdgeInsets.zero,
-		    children: [
-		      SizedBox(height: 200),
-		      ListTile(
-			leading: Icon(
-			  Icons.logout,
-			  color: Colors.white,
-			),
-			selected: true,
-			title: Text("Logout", style: TextStyle(fontFamily: "Mohave", fontSize: 23, color: Colors.white),),
-			onTap:(){
-			  logout();
-			},
-		      ),
-		    ],
-		  ),
-		),
-	      ),
-	      appBar: AppBar(
-		title: Container(alignment: Alignment(-0.21, 0), child: Text("batuwa", style: TextStyle(fontFamily: 'Mohave',))),
-		backgroundColor: Color(0xff252a42),
-	      ),
-	      body: Container(
-		alignment: Alignment.center,
-		color: Color(0xff0e0f26),
-		child: normalscreen(),
-	      ),
-	    );
-  	  }
-        }
-      },
-    );
-  }
-
-  Future<void> logout() async{ //Signs the user out.
-    await FirebaseAuth.instance.signOut();
-  }
-
+	}
+	else if(snapshot.data['token'] == 1){
+	  return Scaffold(
+	    appBar: AppBar(
+	      title: Center(child: Text("batuwa", style: TextStyle(fontFamily: 'Mohave',))),
+	      backgroundColor: Color(0xff252a42),
+	    ),
+	    body: Container(
+	      alignment: Alignment.center,
+	      color: Color(0xff0e0f26),
+	      child: firsttimeLogin(),
+	    ),
+	  );
+	}
+	else if(snapshot.data['token'] == -1){
+	  return normalscreen();     
+	}
+      else{
+	return customizescreen(); 
+      }
+    }
+  );
+}
 }

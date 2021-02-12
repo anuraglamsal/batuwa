@@ -5,6 +5,7 @@ Future<void> firsttimelogin(int token) async{
   CollectionReference users = FirebaseFirestore.instance.collection('token');
   users.doc(FirebaseAuth.instance.currentUser.uid.toString()).set({
     'token': token,
+    'username': "",
   });
 }
 
@@ -15,6 +16,15 @@ void update_token(){
       .collection("token")
       .doc(FirebaseAuth.instance.currentUser.uid)
       .update({"token": 0}).then((_){
+	print("Success!");
+      });
+} 
+
+void update_token_2(){
+  firestoreInstance
+      .collection("token")
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .update({"token": -1}).then((_){
 	print("Success!");
       });
 } 
