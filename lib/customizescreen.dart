@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'cloud.dart';
 
 class customizescreen extends StatefulWidget{
   @override
@@ -9,6 +10,7 @@ class customizescreen extends StatefulWidget{
 class _customizescreenState extends State<customizescreen>{
   bool successful = false;
   bool user_exists = false;
+  bool button = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>(); 
   TextEditingController usernameController = new TextEditingController(); 
   @override
@@ -46,6 +48,7 @@ class _customizescreenState extends State<customizescreen>{
 		  controller: usernameController,
 		  style: TextStyle(color: Colors.white),
 		  decoration: InputDecoration(
+		    errorMaxLines: 3,
 		    enabledBorder: UnderlineInputBorder(
 		      borderSide: BorderSide(color: Color(0xff434a66)),
 		    ),
@@ -61,6 +64,13 @@ class _customizescreenState extends State<customizescreen>{
 			user_exists = false;
 		      });
 		      return "Required";
+		    }
+		    else if(!validateUsername(value)){
+		      setState((){
+			successful = false;
+			user_exists = false;
+		      }); 
+		      return "The username should be 5 to 15 characters in length, and it should only contain letters (both uppercase and lowercase), numbers and underscores.";
 		    }
 		  },
 		),
@@ -79,6 +89,7 @@ class _customizescreenState extends State<customizescreen>{
 		      if(formkey.currentState.validate()){ 
 			setState((){
 			  successful = true;
+			  user_exists = false;
 			});
 			check_username(usernameController.text);
 		      }
@@ -95,16 +106,24 @@ class _customizescreenState extends State<customizescreen>{
 	    SizedBox(height: 15),
 	    user_exists ? Text("The username is already taken.", style: TextStyle(color: Colors.red[500], fontFamily: 'Mohave', fontSize: 17),) 
 		: SizedBox(),
+	    SizedBox(height: 100),
 	  ],
 	),
       ),
     );
   }
+
+  bool validateUsername(String value){
+    String pattern = r'^[A-Za-z0-9_]{5,15}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
+  }
  
   void check_username(username) async{
     final doc = await FirebaseFirestore.instance.collection('token').where('username', isEqualTo: username).get();
     if(doc.size == 0){
-
+      update_username(username);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => profilephoto()));
     }
     else{
       setState((){
@@ -115,4 +134,17 @@ class _customizescreenState extends State<customizescreen>{
   }
 
 }
+
+class profilephoto extends StatefulWidget{
+  @override
+  _profilephotoState createState() => _profilephotoState();
+}
+
+class _profilephotoState extends State<profilephoto>{
+  @override
+  Widget build(BuildContext context){
+    return Text("YEP",);
+  }
+}
+
 

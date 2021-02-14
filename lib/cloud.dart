@@ -28,3 +28,12 @@ void update_token_2(){
 	print("Success!");
       });
 } 
+
+void update_username(username){
+  firestoreInstance
+      .collection("token")
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .update({"username": username}).then((_){
+	print("Success!");
+      });
+}

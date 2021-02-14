@@ -28,7 +28,7 @@ class userscreen extends StatelessWidget{
 	    ),
 	  );
 	}
-	else if(snapshot.data['token'] == -1){
+	else if(snapshot.data['token'] == 0){
 	  return normalscreen();     
 	}
       else{
