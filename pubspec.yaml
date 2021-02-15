@@ -36,6 +36,8 @@ dependencies:
   flutter_map: ^0.11.0
   latlng: ^0.0.2
   firebase_storage: ^7.0.0
+  image_picker: ^0.6.7+22
+  permission_handler: ^5.1.0+2
   
 
   # The following adds the Cupertino Icons font to your application.
@@ -64,6 +66,7 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/logo2.png 
+    - assets/images/ProfilePic.png
   fonts:
     - family: Mohave
       fonts:

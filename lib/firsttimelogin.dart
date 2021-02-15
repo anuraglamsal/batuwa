@@ -40,7 +40,7 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
 	    ),
 	  ),
 	  onTap: (){
-	    update_token();
+	    update_token(0);
 	  },
 	),
 	SizedBox(height: 17),
@@ -62,7 +62,7 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
 	    ),
 	  ),
 	  onTap: (){
-	    update_token_2();
+	    update_token(-1);
 	  },
 	),
       ],

@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firsttimelogin.dart';
 import 'normalscreen.dart';
-import 'customizescreen.dart';
 import 'cloud.dart';
+import 'usernamescreen.dart';
+import 'profpicscreen.dart';
 
 class userscreen extends StatelessWidget{
   @override
@@ -32,9 +33,15 @@ class userscreen extends StatelessWidget{
 	  return normalscreen();     
 	}
       else{
-	return customizescreen(); 
+	if(snapshot.data['token'] == -1){
+	  return usernamescreen();
+        }
+	else{
+	  return profpicscreen();
+        }
       }
     }
   );
 }
+
 }

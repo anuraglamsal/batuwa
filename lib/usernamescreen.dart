@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'cloud.dart';
 
-class customizescreen extends StatefulWidget{
+class usernamescreen extends StatefulWidget{
   @override
-  _customizescreenState createState() => _customizescreenState();
+  _usernamescreenState createState() => _usernamescreenState();
 }
 
-class _customizescreenState extends State<customizescreen>{
+class _usernamescreenState extends State<usernamescreen>{
   bool successful = false;
   bool user_exists = false;
   bool button = false;
@@ -123,7 +123,7 @@ class _customizescreenState extends State<customizescreen>{
     final doc = await FirebaseFirestore.instance.collection('token').where('username', isEqualTo: username).get();
     if(doc.size == 0){
       update_username(username);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => profilephoto()));
+      update_token(-2);
     }
     else{
       setState((){
@@ -134,17 +134,3 @@ class _customizescreenState extends State<customizescreen>{
   }
 
 }
-
-class profilephoto extends StatefulWidget{
-  @override
-  _profilephotoState createState() => _profilephotoState();
-}
-
-class _profilephotoState extends State<profilephoto>{
-  @override
-  Widget build(BuildContext context){
-    return Text("YEP",);
-  }
-}
-
-
