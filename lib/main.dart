@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget{
       stream: FirebaseAuth.instance.authStateChanges(), //This stream gives information about whether a user is logged in or not. 
       builder: (context, snapshot){
 	if(snapshot.connectionState == ConnectionState.waiting){
-	  return Text("YEP");
+	  return Text("YEP");//replace Text("YEP"); with LinearProgressIndicator(); 
         }
 	else{
 	  return MaterialApp(
