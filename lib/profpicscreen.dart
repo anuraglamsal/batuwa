@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 
+//This is the screen the user is sent to when the 'token' is '-2'.
 class profpicscreen extends StatefulWidget{
   @override
   _profpicscreenState createState() => _profpicscreenState();
@@ -14,7 +15,7 @@ class _profpicscreenState extends State<profpicscreen>{
   String imageUrl;
   bool indicator = false;
   @override
-  void initState(){
+  void initState(){ //This function is run before the widget is built.
     super.initState();
     getImageUrl();
   }
@@ -35,7 +36,7 @@ class _profpicscreenState extends State<profpicscreen>{
 		CircleAvatar(
 		  radius: 50,
 		  backgroundColor: Color(0xff252a42),
-		  backgroundImage: NetworkImage(imageUrl),
+		  backgroundImage: NetworkImage(imageUrl), //'NetworkImage' downloads the image associated with 'imageUrl'.
 		) :
 		CircleAvatar(
 		  radius: 50,
@@ -71,7 +72,7 @@ class _profpicscreenState extends State<profpicscreen>{
     );
   }
 
-  uploadImage() async{
+  uploadImage() async{ //Read the 'Flutter cloud storage' docs and watch this video: https://www.youtube.com/watch?v=pvRpzyBYBbA to understand this.
     final _storage = firebase_storage.FirebaseStorage.instance;
     final _picker = ImagePicker();
     PickedFile image;
@@ -93,9 +94,11 @@ class _profpicscreenState extends State<profpicscreen>{
     }
   }
 
-  getImageUrl() async{
+  getImageUrl() async{//This gets the profile picture associated with the logged in user. To fully understand this, read this doc: 
+    		      //https://firebase.flutter.dev/docs/storage/usage.
     imageUrl = await firebase_storage.FirebaseStorage.instance.ref('ProfPic/${FirebaseAuth.instance.currentUser.uid.toString()}').getDownloadURL();
-    setState((){
+    //'The "FirebaseAuth.instance.currentUser.uid" method fetches the unique user id of the logged in user.
+    setState((){//The widget is rebuilt when the url for the profile image is fetched.
     });
   }
 

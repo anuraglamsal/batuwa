@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'cloud.dart';
 
+//This is the screen that the user is directed to when the token is '-1'.
 class usernamescreen extends StatefulWidget{
   @override
   _usernamescreenState createState() => _usernamescreenState();
@@ -70,7 +71,7 @@ class _usernamescreenState extends State<usernamescreen>{
 			successful = false;
 			user_exists = false;
 		      }); 
-		      return "The username should be 5 to 15 characters in length, and it should only contain letters (both uppercase and lowercase), numbers and underscores.";
+		      return "The username should be 5 to 15 characters in length, and it should only contain letters (both uppercase and lowercase), numbers and underscores."; //The username's validation condition.
 		    }
 		  },
 		),
@@ -113,17 +114,18 @@ class _usernamescreenState extends State<usernamescreen>{
     );
   }
 
-  bool validateUsername(String value){
+  bool validateUsername(String value){ //Regex that checks if the username is valid. 
     String pattern = r'^[A-Za-z0-9_]{5,15}$';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
  
   void check_username(username) async{
-    final doc = await FirebaseFirestore.instance.collection('token').where('username', isEqualTo: username).get();
-    if(doc.size == 0){
-      update_username(username);
-      update_token(-2);
+    final doc = await FirebaseFirestore.instance.collection('token').where('username', isEqualTo: username).get(); //This method fetches
+    //the documents where the 'username' field is the username given by the user.
+    if(doc.size == 0){ //If there is no document like that, then the username is not used before, thus allowed.
+      update_username(username); //This updates the user's username. The function is in 'cloud.dart'.
+      update_token(-2); //The token is updated to send the user to the 'profile picture' screen.
     }
     else{
       setState((){

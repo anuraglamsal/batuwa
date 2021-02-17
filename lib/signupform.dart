@@ -194,7 +194,7 @@ class _signupformState extends State<signupform>{
   Future<void> registerNewUser(email, password) async{
     bool flag = true;
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword( 
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword( //Read the flutter firebase auth docs to understand this
 	email: email, 
 	password: password  
       );

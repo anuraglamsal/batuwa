@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'cloud.dart';
 
+//This is the page that the user is directed to when they login for the first time i.e. when their token is '1'.
 class firsttimeLogin extends StatefulWidget{
   @override
   _firsttimeLoginState createState() => _firsttimeLoginState();
@@ -40,7 +41,7 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
 	    ),
 	  ),
 	  onTap: (){
-	    update_token(0);
+	    update_token(0); //When they press this container, the token is updated to '0'. Token logic: shorturl.at/atDIP
 	  },
 	),
 	SizedBox(height: 17),
@@ -62,7 +63,7 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
 	    ),
 	  ),
 	  onTap: (){
-	    update_token(-1);
+	    update_token(-1); //When they press this container, the token is updated to '-1'. Token logic: shorturl.at/atDIP
 	  },
 	),
       ],

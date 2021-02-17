@@ -217,7 +217,7 @@ class _signinformState extends State<signinform>{
   Future<void> signinUser(email, password) async{
     bool flag = true;
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword( //Read the 'Flutter Firebase Auth' docs to understand this.
 	email: email,
 	password: password
       );
