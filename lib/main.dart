@@ -12,7 +12,7 @@ Future<void> main() async{ //You need to initialize the "main" function in this 
 
 class MyApp extends StatelessWidget{
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context){  //Buildcontext describes where you are in the tree of widgets of your application.
     return StreamBuilder( //Learn about 'streams' before proceeding.
       stream: FirebaseAuth.instance.authStateChanges(), //This stream gives information about whether a user is logged in or not. 
       builder: (context, snapshot){
