@@ -8,6 +8,7 @@ import 'usernamescreen.dart';
 import 'profpicscreen.dart';
 
 class userscreen extends StatelessWidget{
+
   @override
   Widget build(BuildContext build){
     return StreamBuilder(
@@ -43,6 +44,10 @@ class userscreen extends StatelessWidget{
 	}
       }
     );
+  }
+
+  Future<void> logout() async{
+    await FirebaseAuth.instance.signOut();
   }
 
 }
