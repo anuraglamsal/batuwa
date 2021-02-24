@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
-import 'package:geolocator/geolocator.dart';
+import 'map.dart';
 
 //The screen that the user is directed to when their token is '0', i.e. this is their feed screen.
 class normalscreen extends StatefulWidget{
@@ -100,76 +98,6 @@ class _normalscreenState extends State<normalscreen>{
 
   Future<void> logout() async{ //Signs the user out.
     await FirebaseAuth.instance.signOut();
-  }
-
-}
-
-class Embark extends StatefulWidget{
-  @override
-  _EmbarkState createState() => _EmbarkState();
-}
-
-class _EmbarkState extends State<Embark>{
-  Position position;
-  MapController mapController = MapController();
-  @override
-  void initState(){
-    super.initState();
-    move_map();
-    getCurrentLocation();
-  }
-  @override
-  Widget build(BuildContext context){
-    if(position == null){
-      return CircularProgressIndicator();
-    }
-    else{
-      return FlutterMap(
-	mapController: mapController,
-	options: MapOptions(
-	  center: LatLng(position.latitude, position.longitude),
-	  zoom: 17.0,
-	),
-	layers: [
-	  TileLayerOptions(
-	    urlTemplate: 'http://mt{s}.google.com/vt/lyrs=m@221097413,parking,traffic,lyrs=m&x={x}&y={y}&z={z}',
-	    maxZoom: 22.0,
-	    subdomains: ['0', '1', '2', '3'],
-	    retinaMode: true,
-	  ),
-	  MarkerLayerOptions(
-	    markers: [
-	      Marker(
-		width: 80.0,
-		height: 80.0,
-		point: LatLng(position.latitude, position.longitude),
-		builder: (ctx) =>
-		Container(
-		  child: FlutterLogo(),
-		),
-	      ),
-	    ],
-	  ),
-	],
-      );
-    }
-  }
-
-  void getCurrentLocation() async{
-    Position _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    setState((){
-      position = _position;
-    });
-  }
-
-  move_map(){
-    Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high).listen((Position position){
-      print(position);
-      mapController.move(
-	LatLng(position.latitude, position.longitude),
-	17,
-      );
-    });
   }
 
 }
