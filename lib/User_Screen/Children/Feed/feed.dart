@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'map.dart';
+import 'Children/map.dart';
 
 //The screen that the user is directed to when their token is '0', i.e. this is their feed screen.
 class normalscreen extends StatefulWidget{

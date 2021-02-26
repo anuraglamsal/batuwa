@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'cloud.dart';
+import '../../Cloud_Firestore/cloud.dart';
 
 class signupform extends StatefulWidget{//Needs to be stateful to show errors.
   @override
