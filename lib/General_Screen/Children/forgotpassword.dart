@@ -8,11 +8,11 @@ class ForgotPassword extends StatefulWidget{
 }
 
 class _ForgotPasswordState extends State<ForgotPassword>{
-  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool success = false;
   bool failure = false;
   bool circle = false;
-  TextEditingController emailController = new TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -35,7 +35,7 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 	  color: Color(0xff0e0f26),
 	  child: Column(
 	    mainAxisAlignment: MainAxisAlignment.start,
-	    children: <Widget>[
+	    children: [
 	      SizedBox(height: 20),
 	      Container(
 		height: 90,
@@ -132,7 +132,7 @@ class _ForgotPasswordState extends State<ForgotPassword>{
   FirebaseAuth auth = FirebaseAuth.instance; //This instance is required to use FirebaseAuth services. 
   				             //Read their doc: https://firebase.flutter.dev/docs/auth/usage/
 
-  Future<void> resetPassword(email) async{ //This function sends an email to the user regarding password change.
+  resetPassword(email) async{ //This function sends an email to the user regarding password change.
     bool flag = true; 
     try{
       await auth.sendPasswordResetEmail(email: email); //This method particularly sends the email.
@@ -144,7 +144,7 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 	  success = false;
 	  failure = true;
 	  circle = false;
-        });
+	});
       }
     }
     if(flag){ //When the flag is true, then that means the email was successfully sent, thus, that particular message is shown on the app's screen.

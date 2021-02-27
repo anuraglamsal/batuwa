@@ -96,7 +96,7 @@ class _normalscreenState extends State<normalscreen>{
   }
 
 
-  Future<void> logout() async{ //Signs the user out.
+  logout() async{ //Signs the user out.
     await FirebaseAuth.instance.signOut();
   }
 

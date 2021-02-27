@@ -12,8 +12,8 @@ class _usernamescreenState extends State<usernamescreen>{
   bool successful = false;
   bool user_exists = false;
   bool button = false;
+  TextEditingController usernameController = TextEditingController(); 
   GlobalKey<FormState> formkey = GlobalKey<FormState>(); 
-  TextEditingController usernameController = new TextEditingController(); 
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -116,11 +116,11 @@ class _usernamescreenState extends State<usernamescreen>{
 
   bool validateUsername(String value){ //Regex that checks if the username is valid. 
     String pattern = r'^[A-Za-z0-9_]{5,15}$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     return regExp.hasMatch(value);
   }
  
-  void check_username(username) async{
+  check_username(username) async{
     final doc = await FirebaseFirestore.instance.collection('token').where('username', isEqualTo: username).get(); //This method fetches
     //the documents where the 'username' field is the username given by the user.
     if(doc.size == 0){ //If there is no document like that, then the username is not used before, thus allowed.

@@ -21,8 +21,8 @@ class _EmbarkState extends State<Embark>{
   @override
   void initState(){
     super.initState();
-    getCurrentLocation();
-    move_map();
+    users_initial_location_in_map();
+    real_time_marker_change();
   }
   @override
   Widget build(BuildContext context){
@@ -89,7 +89,7 @@ class _EmbarkState extends State<Embark>{
 		  ),
 		  child: Icon(Icons.location_searching,),
 		  onPressed: (){
-		    click_button();
+		    move_map_camera_to_user();
 		  },
 		),
 	      ),
@@ -100,14 +100,14 @@ class _EmbarkState extends State<Embark>{
     }
   }
 
-  void getCurrentLocation() async{
-    Position _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  users_initial_location_in_map() async{
+    Position _position = await get_users_location();
     setState((){
       position = _position;
     });
   }
 
-  move_map(){
+  real_time_marker_change(){
     location_data = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high).listen((Position _position){
       setState((){
 	position = _position;
@@ -115,12 +115,17 @@ class _EmbarkState extends State<Embark>{
     });
   }
 
-  click_button() async{
-    Position _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+  move_map_camera_to_user() async{
+    Position _position = await get_users_location();
     mapController.move(
       LatLng(_position.latitude, _position.longitude),
       20,
     );
+  }
+
+  Future<Position> get_users_location() async{
+    Position _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return _position;
   }
 
 }

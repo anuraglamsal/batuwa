@@ -10,13 +10,13 @@ class signinform extends StatefulWidget{ //Needs to be stateful because we show 
 } 
 
 class _signinformState extends State<signinform>{
-  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool emailnotfound = false; //These booleans are used to show error messages.
   bool wrongpassword = false;
   bool verifyyouremail = false;
   bool successful = false;
-  TextEditingController emailController = new TextEditingController(); //These controllers are used to fetch form-entered data in real-time.
-  TextEditingController passwordController = new TextEditingController(); 
+  TextEditingController emailController = TextEditingController(); //These controllers are used to fetch form-entered data in real-time.
+  TextEditingController passwordController = TextEditingController(); 
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context){
     return KeyboardVisibilityBuilder( //Detects if there is keyboard on the screen. This allows us to do stuff depending upon keyboard being on 
@@ -29,7 +29,7 @@ class _signinformState extends State<signinform>{
 	    color: Color(0xff0e0f26),
 	    child: Column(
 	      mainAxisAlignment: MainAxisAlignment.start, 
-	      children: <Widget>[
+	      children: [
 		SizedBox(height: 10),
 		!isKeyboardVisible ? 
 		Image.asset('assets/images/logo2.png', width: 300, height: 150):SizedBox(), //The logo is removed when the keyboard is on screen
@@ -129,7 +129,7 @@ class _signinformState extends State<signinform>{
 			remove_errors_from_screen();
 			return "A password of length more than or equal to 12 is required";
 		      }
-		      else if(!validateStructure(value)){
+		      else if(!verifyPasswordRules(value)){
 			remove_errors_from_screen();
 			return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
 		      }
@@ -197,9 +197,9 @@ class _signinformState extends State<signinform>{
 
   //All of the functions being used in the widget.
 
-  bool validateStructure(String value){ //This allows us to have the password condition as described above.
+  bool verifyPasswordRules(String value){ //This allows us to have the password condition as described above.
     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     return regExp.hasMatch(value);
   }
 
@@ -214,10 +214,10 @@ class _signinformState extends State<signinform>{
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  Future<void> signinUser(email, password) async{
+  signinUser(email, password) async{
     bool flag = true;
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword( //Read the 'Flutter Firebase Auth' docs to understand this.
+      UserCredential userCredential = await auth.signInWithEmailAndPassword( //Read the 'Flutter Firebase Auth' docs to understand this.
 	email: email,
 	password: password
       );

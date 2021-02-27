@@ -10,15 +10,15 @@ class signupform extends StatefulWidget{//Needs to be stateful to show errors.
 }
 
 class _signupformState extends State<signupform>{
-  GlobalKey<FormState> formkey = GlobalKey<FormState>(); //Formkey is required for validators to work.
   bool validated = false;
   bool email_exists = false;
   bool successful = false;
-  TextEditingController emailController = new TextEditingController(); 
-  TextEditingController passwordController = new TextEditingController(); 
+  TextEditingController emailController = TextEditingController(); 
+  TextEditingController passwordController = TextEditingController(); 
+  GlobalKey<FormState> formkey = GlobalKey<FormState>(); //Formkey is required for validators to work.
   @override
   Widget build(BuildContext context){
-    return KeyboardVisibilityBuilder(
+    return KeyboardVisibilityBuilder( 
       builder: (context, isKeyboardVisible){
 	return Form(
 	  key: formkey, 
@@ -126,7 +126,7 @@ class _signupformState extends State<signupform>{
 			remove_errors_from_screen();
 			return "A password of length more than or equal to 12 is required";
 		      }
-		      else if(!validateStructure(value)){
+		      else if(!verifyPasswordRules(value)){
 			remove_errors_from_screen();
 			return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
 		      }
@@ -175,9 +175,9 @@ class _signupformState extends State<signupform>{
     );
   }
 
-  bool validateStructure(String value){ 
+  bool verifyPasswordRules(String value){ 
     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     return regExp.hasMatch(value);
   }
 
@@ -191,10 +191,10 @@ class _signupformState extends State<signupform>{
 
   FirebaseAuth auth = FirebaseAuth.instance; 
 
-  Future<void> registerNewUser(email, password) async{
+  registerNewUser(email, password) async{
     bool flag = true;
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword( //Read the flutter firebase auth docs to understand this
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword( //Read the flutter firebase auth docs to understand this
 	email: email, 
 	password: password  
       );

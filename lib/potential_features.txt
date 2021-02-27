@@ -1,0 +1,24 @@
+1.) Let the user save a particular location such that their followers now get that location on their feed and their map (and of course the user themselves too.) 
+2.) Machine learning algorithm to recommend locations to a user based on their saves and followings. 
+3.) If the user is a new user without any following, then recommend them based on either:
+
+        * Preliminary questions.
+
+	or, 
+
+	* Most sought out locations around the area the user is in based on the app's overall database.
+	
+	or, 
+
+	* Both.
+
+4.) Searching for users.
+5.) What information should the user be prompted to provide when they are saving a location? We have to think about what things are important
+    for a person visiting a location:
+
+    	* Subjective level of enjoyment of that user using some metric (what metric though?). This would be more of a tldr than descriptive.
+	* Actual descriptive stuff about the location. Stuff like: is this more of a picnic spot?, is this more of a historical spot?, 
+	  , is this place clean?, are there restaurants nearby?, is this more of a hiking spot, etc....
+	* Maybe a place for the user to write freely about the location rather than being forced to choose certain things.
+	* Letting the user add pictures of the place.
+	* and more... 
