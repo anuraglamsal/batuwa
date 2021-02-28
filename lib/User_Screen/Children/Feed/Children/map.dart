@@ -70,6 +70,15 @@ class _EmbarkState extends State<Embark>{
 			    child: Icon(Icons.location_pin, size: 50, color: Colors.blue[600],),
 			  ),
 			),
+			Marker(
+			  width: 80.0,
+			  height: 80.0,
+			  point: LatLng(position.latitude - 0.001, position.longitude - 0.001),
+			  builder: (ctx) =>
+			  Container(
+			    child: Icon(Icons.location_pin, size: 50, color: Colors.blue[600],),
+			  ),
+			),
 		      ],
 		    ),
 		  ],
