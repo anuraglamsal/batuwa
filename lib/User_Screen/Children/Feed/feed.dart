@@ -54,6 +54,14 @@ class _normalscreenState extends State<normalscreen>{
       appBar: AppBar(
 	title: Container(alignment: Alignment(-0.21, 0), child: Text("batuwa", style: TextStyle(fontFamily: 'Mohave',))),
 	backgroundColor: Color(0xff252a42),
+	actions: [
+	  IconButton(
+	    icon: Icon(Icons.search),
+	    onPressed: (){
+	      showSearch(context: context, delegate: UserSearch(),);
+	    },
+	  ),
+	],
       ),
       body: Container(
 	alignment: Alignment.center,
@@ -100,6 +108,38 @@ class _normalscreenState extends State<normalscreen>{
     await FirebaseAuth.instance.signOut();
   }
 
+}
+
+class UserSearch extends SearchDelegate<String>{
+  @override
+  List<Widget> buildActions(BuildContext context){ //Widgets to show to the right of the search bar
+    return [
+      IconButton(
+	icon: Icon(Icons.clear),
+	onPressed: (){
+	  query = ''; //this clears the search bar when the user presses the icon button.
+        },
+      ),
+    ];
+  }
+  @override
+  Widget buildLeading(BuildContext context){ //Widgets to show to the left of the search bar
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: (){
+	close(context, null); //This takes us back to the feed.
+      },
+    );
+  }
+  @override
+  Widget buildResults(BuildContext context){ //The widget to show when the user presses submit after completing entering their search query.
+    return Container();
+  }
+  @override
+  Widget buildSuggestions(BuildContext context){ //The suggestions to show when the user is entering something in the search bar but hasn't submitted
+						 //yet.
+    return Container();
+  }
 }
 
 
