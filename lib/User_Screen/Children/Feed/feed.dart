@@ -138,7 +138,23 @@ class UserSearch extends SearchDelegate<String>{
   @override
   Widget buildSuggestions(BuildContext context){ //The suggestions to show when the user is entering something in the search bar but hasn't submitted
 						 //yet.
-    return Container();
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance.collection('token').get(),
+      builder: (context, snapshot){
+	if(snapshot.connectionState == ConnectionState.waiting){
+	  return Container();
+        }
+	var list = List();
+	snapshot.data.docs.forEach((doc){
+	  if(query == doc['username'].substring(0, query.length)){
+	    list.add(doc['username']);
+	  }
+        });
+	return ListView(
+	  children: list,
+	);
+      }
+    );
   }
 }
 
