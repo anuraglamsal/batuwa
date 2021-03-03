@@ -141,17 +141,24 @@ class UserSearch extends SearchDelegate<String>{
     return FutureBuilder<QuerySnapshot>(
       future: FirebaseFirestore.instance.collection('token').get(),
       builder: (context, snapshot){
-	if(snapshot.connectionState == ConnectionState.waiting){
-	  return Container();
+	if(!snapshot.hasData){ 
+	  return Container(); //Basically don't show anything when there is no data.
         }
 	var list = List();
 	snapshot.data.docs.forEach((doc){
-	  if(query == doc['username'].substring(0, query.length)){
-	    list.add(doc['username']);
+	  //print(doc.id);
+	  if(query.length <= doc['username'].length){
+	    if(query.toLowerCase() == doc['username'].toLowerCase().substring(0, query.length) && query.length != 0){
+	      list.add(doc['username']);
+	    }
 	  }
         });
 	return ListView(
-	  children: list,
+	  children: list.map((user){
+	    return ListTile(
+	      title: Text(user,),
+	    );
+	  }).toList(),
 	);
       }
     );
