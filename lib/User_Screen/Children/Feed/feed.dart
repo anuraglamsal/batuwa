@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Children/map.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 //The screen that the user is directed to when their token is '0', i.e. this is their feed screen.
 class normalscreen extends StatefulWidget{
@@ -111,6 +112,7 @@ class _normalscreenState extends State<normalscreen>{
 }
 
 class UserSearch extends SearchDelegate<String>{
+  var url;
   @override
   List<Widget> buildActions(BuildContext context){ //Widgets to show to the right of the search bar
     return [
@@ -146,17 +148,26 @@ class UserSearch extends SearchDelegate<String>{
         }
 	var list = List();
 	snapshot.data.docs.forEach((doc){
-	  //print(doc.id);
 	  if(query.length <= doc['username'].length){
 	    if(query.toLowerCase() == doc['username'].toLowerCase().substring(0, query.length) && query.length != 0){
-	      list.add(doc['username']);
+	      list.add(doc);
 	    }
 	  }
         });
 	return ListView(
 	  children: list.map((user){
-	    return ListTile(
-	      title: Text(user,),
+	    return FutureBuilder(
+	      future: firebase_storage.FirebaseStorage.instance.ref('ProfPic/${user.id}').getDownloadURL(),
+	      builder: (context, snapshot){
+		if(!snapshot.hasData){
+		  return Container(); 
+	        }
+		return ListTile(
+		  leading: CircleAvatar(
+		    backgroundImage: NetworkImage(snapshot.data)),
+		  title: Text(user["username"],),
+		);
+	      }
 	    );
 	  }).toList(),
 	);
