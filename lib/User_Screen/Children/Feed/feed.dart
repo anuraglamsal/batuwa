@@ -147,21 +147,25 @@ class UserSearch extends SearchDelegate<String>{
 	  return Container(); //Basically don't show anything when there is no data.
         }
 	var list = List();
-	snapshot.data.docs.forEach((doc){
-	  if(query.length <= doc['username'].length){
-	    if(query.toLowerCase() == doc['username'].toLowerCase().substring(0, query.length) && query.length != 0){
-	      list.add(doc);
+	for(int i=0; i < snapshot.data.docs.length; ++i){
+	  if(query.length <= snapshot.data.docs[i]['username'].length){
+	    if(query.toLowerCase() == snapshot.data.docs[i]['username'].toLowerCase().substring(0, query.length) && query.length != 0){
+	      list.add(snapshot.data.docs[i]);
+	      if(list.length == 5){ //How many users to show on screen?
+		break;
+	      }
 	    }
 	  }
-        });
+        }
+	bool flag = false;
 	return ListView(
 	  children: list.map((user){
 	    return FutureBuilder(
 	      future: firebase_storage.FirebaseStorage.instance.ref('ProfPic/${user.id}').getDownloadURL(),
 	      builder: (context, snapshot){
 		if(!snapshot.hasData){
-		  return Container(); 
-	        }
+		  return Container();
+		}
 		return ListTile(
 		  leading: CircleAvatar(
 		    backgroundImage: NetworkImage(snapshot.data)),
