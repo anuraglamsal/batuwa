@@ -143,9 +143,12 @@ class UserSearch extends SearchDelegate<String>{
     return FutureBuilder<QuerySnapshot>(
       future: FirebaseFirestore.instance.collection('token').get(),
       builder: (context, snapshot){
-	if(!snapshot.hasData){ 
-	  return Container(); //Basically don't show anything when there is no data.
-        }
+	if(!snapshot.hasData){
+	  if(query == ''){
+	    return Container();
+	  }
+	  return CircularProgressIndicator();
+	}
 	var list = List();
 	for(int i=0; i < snapshot.data.docs.length; ++i){
 	  if(query.length <= snapshot.data.docs[i]['username'].length){
@@ -156,10 +159,59 @@ class UserSearch extends SearchDelegate<String>{
 	      }
 	    }
 	  }
+	}
+	if(list.length == 0){
+	  list.add(0);
         }
-	bool flag = false;
 	return ListView(
 	  children: list.map((user){
+	    if(user == 0 && query != ''){
+	      return ListTile(
+		title: Text("No user like that.",),
+	      );
+	    }
+	    if(query == ''){
+	      return ListTile();
+	    }
+	    return ListTile(
+	      leading: CircleAvatar(
+		backgroundImage: (user["profpicURL"] == "") ? AssetImage(
+		  'assets/images/ProfilePic.png',
+		) : NetworkImage(user["profpicURL"]),
+	      ),
+	      title: Text(user["username"],),
+	    );
+	  }).toList(),
+	);
+      }
+    );
+    /*return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance.collection('token').get(),
+      builder: (context, snapshot){
+	if(!snapshot.hasData){ 
+	  return Container(); //Basically don't show anything when there is no data.
+        }
+	var list = List();
+	for(int i=0; i < snapshot.data.docs.length; ++i){
+	  if(query.length <= snapshot.data.docs[i]['username'].length){
+	    if(query.toLowerCase() == snapshot.data.docs[i]['username'].toLowerCase().substring(0, query.length) && query.length != 0){
+	      list.add(snapshot.data.docs[i]);
+	      if(list.length == 6){ //How many users to show on screen?
+		break;
+	      }
+	    }
+	  }
+        }
+	if(query != ''){
+	  list.add(CircularProgressIndicator());
+        }
+	return ListView(
+	  children: list.map((user){
+	    if(user.runtimeType == CircularProgressIndicator){
+	      return ListTile(
+		leading: user,
+	      );
+	    }
 	    return FutureBuilder(
 	      future: firebase_storage.FirebaseStorage.instance.ref('ProfPic/${user.id}').getDownloadURL(),
 	      builder: (context, snapshot){
@@ -176,7 +228,7 @@ class UserSearch extends SearchDelegate<String>{
 	  }).toList(),
 	);
       }
-    );
+    );*/
   }
 }
 
