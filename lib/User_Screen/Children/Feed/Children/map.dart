@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+//import 'package:flutter_map/flutter_map.dart';
+//import 'package:latlong/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 class Embark extends StatefulWidget{
@@ -10,9 +11,60 @@ class Embark extends StatefulWidget{
 }
 
 class _EmbarkState extends State<Embark>{
-  Position position;
-  StreamSubscription location_data;
-  MapController mapController = MapController();
+  double lat;
+  double long;
+  @override 
+  void initState(){
+    users_initial_location();
+  }
+  @override
+  Widget build(BuildContext context){
+    if(lat==null){
+      return Container(
+	alignment: Alignment.center,
+	color: Color(0xff0e0f26),
+	child: Container(
+	  height: 20,
+	  width: 20,
+	  child: CircularProgressIndicator(),
+	),
+      );
+    }
+    return Container(
+      alignment: Alignment.center,
+      child: Stack(
+	children: [
+	  SizedBox(height: 50),
+	  Expanded(
+	    child: GoogleMap(
+	      initialCameraPosition: CameraPosition(
+		target: LatLng(lat, long),
+		zoom: 18,
+	      ),
+	      markers: <Marker>{
+		Marker(
+		  markerId: MarkerId('hello'),
+		  position: LatLng(lat, long),
+		),
+	      },	    
+	    ),
+	  ),
+	],
+      ),
+    );
+  }
+
+  users_initial_location() async{
+    Position _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState((){
+      lat = _position.latitude;
+      long = _position.longitude;
+    });
+  }
+
+}
+
+/*class _EmbarkState extends State<Embark>{
   @override
   void dispose(){
     location_data.cancel();
@@ -137,4 +189,4 @@ class _EmbarkState extends State<Embark>{
     return _position;
   }
 
-}
+}*/
