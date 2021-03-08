@@ -13,9 +13,10 @@ class Embark extends StatefulWidget{
 class _EmbarkState extends State<Embark>{
   double lat;
   double long;
+  GoogleMapController _controller;
   @override 
   void initState(){
-    users_initial_location();
+    users_location();
   }
   @override
   Widget build(BuildContext context){
@@ -37,6 +38,11 @@ class _EmbarkState extends State<Embark>{
 	  SizedBox(height: 50),
 	  Expanded(
 	    child: GoogleMap(
+	      onMapCreated: (GoogleMapController controller){ //We need to provide a method in this way to onMapCreated which in return gives
+		                    	                      //us a "controller" that can be used to control the map until it is active after 
+						              //its creation. 
+		_controller = controller;
+	      },
 	      initialCameraPosition: CameraPosition(
 		target: LatLng(lat, long),
 		zoom: 18,
@@ -49,12 +55,23 @@ class _EmbarkState extends State<Embark>{
 	      },	    
 	    ),
 	  ),
+	  ElevatedButton(
+	    onPressed: (){
+	      users_location();
+	      _controller.moveCamera(CameraUpdate.newLatLng(LatLng(lat, long)));//This update's the map's camera to the given latitude and longitude.
+	       									//The "moveCamera" method takes in either normal methods or static
+	       									//methods of the "CameraUpdate" class. Static methods are methods
+	      									//of a class that you access through the class directly, not through an	
+	      									//object of the class. For example, here, "newLatLng" is a static method
+	       									//of the "CameraUpdate" class.
+	    }
+	  ),
 	],
       ),
     );
   }
 
-  users_initial_location() async{
+  users_location() async{
     Position _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState((){
       lat = _position.latitude;
