@@ -11,12 +11,20 @@ class Embark extends StatefulWidget{
 }
 
 class _EmbarkState extends State<Embark>{
+  var location_data;
   double lat;
   double long;
   GoogleMapController _controller;
+  @override
+  void dispose(){
+    location_data.cancel();
+    super.dispose();
+  }
   @override 
   void initState(){
+    super.initState();
     users_location();
+    location_stream();
   }
   @override
   Widget build(BuildContext context){
@@ -36,7 +44,9 @@ class _EmbarkState extends State<Embark>{
       child: Stack(
 	children: [
 	  SizedBox(height: 50),
-	  Expanded(
+	  Container(
+	    height: double.infinity,
+	    width: double.infinity,
 	    child: GoogleMap(
 	      onMapCreated: (GoogleMapController controller){ //We need to provide a method in this way to onMapCreated which in return gives
 		                    	                      //us a "controller" that can be used to control the map until it is active after 
@@ -55,16 +65,27 @@ class _EmbarkState extends State<Embark>{
 	      },	    
 	    ),
 	  ),
-	  ElevatedButton(
-	    onPressed: (){
-	      users_location();
-	      _controller.moveCamera(CameraUpdate.newLatLng(LatLng(lat, long)));//This update's the map's camera to the given latitude and longitude.
-	       									//The "moveCamera" method takes in either normal methods or static
-	       									//methods of the "CameraUpdate" class. Static methods are methods
-	      									//of a class that you access through the class directly, not through an	
-	      									//object of the class. For example, here, "newLatLng" is a static method
-	       									//of the "CameraUpdate" class.
-	    }
+	  Positioned(
+	    bottom: 100,
+	    left: 10,
+	    child: ConstrainedBox(
+	      constraints: BoxConstraints.tightFor(width: 70, height: 70),
+	      child: ElevatedButton(
+		style: ElevatedButton.styleFrom(
+		  shape: CircleBorder(),
+		  primary: Colors.blue,
+		),
+		child: Icon(Icons.location_pin, size: 40,),
+		onPressed: (){
+		  _controller.moveCamera(CameraUpdate.newLatLng(LatLng(lat, long)));//This update's the map's camera to the given latitude and longitude.
+		  //The "moveCamera" method takes in either normal methods or static
+		  //methods of the "CameraUpdate" class. Static methods are methods
+		  //of a class that you access through the class directly, not through an	
+		  //object of the class. For example, here, "newLatLng" is a static method
+		  //of the "CameraUpdate" class.
+		}
+	      ),
+	    ),
 	  ),
 	],
       ),
@@ -73,9 +94,21 @@ class _EmbarkState extends State<Embark>{
 
   users_location() async{
     Position _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print(_position);
     setState((){
       lat = _position.latitude;
       long = _position.longitude;
+    });
+  }
+
+  location_stream() {
+    location_data = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high).listen((Position _position){
+      if(_position.latitude >= lat+0.00001 || _position.latitude <= lat-0.00001){
+	setState((){
+	  lat = _position.latitude;
+	  long = _position.longitude;
+	});
+      }
     });
   }
 
