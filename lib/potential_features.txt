@@ -36,3 +36,22 @@ Potential Features:
 	* Maybe a place for the user to write freely about the location rather than being forced to choose certain things.
 	* Letting the user add pictures of the place.
 	* and more... 
+
+	-----------------------------------------------------------
+	-----------------------------------------------------------
+
+
+	How to save current location of the user?
+
+	=> First of all, we have to figure out whether to use "cloud firestore" or "firebase storage." From what I have read,
+	   when you need to store relatively large amounts of information and when sharing is involved, it's better to use 
+	   "firebase storage." So, I think we'll have to use firebase storage. But maybe it'll be a mixture. 
+	   Now, the things needed to be figured out is:
+	     1.) How to store location along with all the information related to that location? 
+	     2.) How to read the stored location information?
+	     3.) How to update a location's information if the user wants to do so?
+	     4.) How to delete a location if the user wants to do so? 
+
+	  We have to some kind of CRUD thing. 
+
+	   
