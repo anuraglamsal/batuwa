@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+import 'save.dart';
 
 class Embark extends StatefulWidget{
   @override
@@ -87,7 +88,27 @@ class _EmbarkState extends State<Embark>{
 	      ),
 	    ),
 	  ),
-	],
+	  Positioned(
+	    bottom: 180,
+	    left: 10,
+	    child: ConstrainedBox(
+	      constraints: BoxConstraints.tightFor(width: 70, height: 70),
+	      child: ElevatedButton(
+		style: ElevatedButton.styleFrom(
+		  shape: CircleBorder(),
+		  primary: Colors.purple,
+		),
+		child: Icon(Icons.save, size: 35,),
+		onPressed: (){
+		  Navigator.push(
+		    context,
+		    MaterialPageRoute(builder: (context) => savescreen()),
+		  );
+	        }
+	      ),
+	    ),
+	  ),
+        ],
       ),
     );
   }

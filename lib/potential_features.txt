@@ -54,4 +54,8 @@ Potential Features:
 
 	  We have to some kind of CRUD thing. 
 
+	  * One idea is to use UUID to give a unique id to each marker and store the geopoint related to the marker in 
+	  firebase with the field name as the UUID. This allows for relatively easy deletion of locations if the user
+	  wants to do so. Creation isn't to unituitive, and read and update also shouldn't be too difficult. 
+
 	   
