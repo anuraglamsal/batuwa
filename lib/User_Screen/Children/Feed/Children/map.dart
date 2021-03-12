@@ -100,17 +100,38 @@ class _EmbarkState extends State<Embark>{
 		),
 		child: Icon(Icons.save, size: 35,),
 		onPressed: (){
-		  Navigator.push(
-		    context,
-		    MaterialPageRoute(builder: (context) => savescreen()),
-		  );
+		  route_to_save(context);
 	        }
 	      ),
 	    ),
 	  ),
+
         ],
       ),
     );
+  }
+
+  route_to_save(BuildContext context) async{
+    final _result = await Navigator.push( 
+      context,
+      MaterialPageRoute(builder: (context) => savescreen(lat, long)),
+    );
+    //After you pop out of the travelled route, the code below is run to show a dialog box that says "Location Saved"
+    if(_result != null){
+      return showDialog(context: context, builder: (context){
+	return AlertDialog(
+	  title: Text("$_result"),
+	  actions: [
+	    MaterialButton(
+	      child: Text("CLOSE"),
+	      onPressed: (){
+		Navigator.pop(context);
+	      },
+	    ),
+	  ],
+	);
+      });
+    }
   }
 
   users_location() async{

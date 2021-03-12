@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../../../Cloud_Firestore/cloud.dart';
 
 class savescreen extends StatefulWidget{
+  final double lat;
+  final double long;
+  const savescreen(this.lat, this.long);
   @override
   _savescreenState createState() => _savescreenState();
 }
@@ -85,6 +89,7 @@ class _savescreenState extends State<savescreen>{
 			setState((){
 			  circle = true;
 			});
+			send_location(widget.lat, widget.long, name.text);
 		      }
 		    },
 		    child: Text(
@@ -101,5 +106,11 @@ class _savescreenState extends State<savescreen>{
       ),
     );
   }
+
+  send_location(lat, long, name){
+    save_location(lat, long, name);
+    Navigator.pop(context, 'Location saved'); //The thing beside context is sent to the route that this route was navigated from.
+  }
+
 }
 
