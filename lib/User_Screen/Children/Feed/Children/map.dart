@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_map/flutter_map.dart';
 //import 'package:latlong/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'save.dart';
@@ -12,6 +14,8 @@ class Embark extends StatefulWidget{
 }
 
 class _EmbarkState extends State<Embark>{
+  Set<Marker> marker_list = new Set();
+  var marker_data;
   var location_data;
   double lat;
   double long;
@@ -19,6 +23,7 @@ class _EmbarkState extends State<Embark>{
   @override
   void dispose(){
     location_data.cancel();
+    marker_data.cancel();
     super.dispose();
   }
   @override 
@@ -26,6 +31,7 @@ class _EmbarkState extends State<Embark>{
     super.initState();
     users_location();
     location_stream();
+    marker_stream();
   }
   @override
   Widget build(BuildContext context){
@@ -50,20 +56,15 @@ class _EmbarkState extends State<Embark>{
 	    width: double.infinity,
 	    child: GoogleMap(
 	      onMapCreated: (GoogleMapController controller){ //We need to provide a method in this way to onMapCreated which in return gives
-		                    	                      //us a "controller" that can be used to control the map until it is active after 
-						              //its creation. 
+		//us a "controller" that can be used to control the map until it is active after 
+		//its creation. 
 		_controller = controller;
 	      },
 	      initialCameraPosition: CameraPosition(
 		target: LatLng(lat, long),
 		zoom: 18,
 	      ),
-	      markers: <Marker>{
-		Marker(
-		  markerId: MarkerId('hello'),
-		  position: LatLng(lat, long),
-		),
-	      },	    
+	      markers: marker_list, 
 	    ),
 	  ),
 	  Positioned(
@@ -105,8 +106,7 @@ class _EmbarkState extends State<Embark>{
 	      ),
 	    ),
 	  ),
-
-        ],
+	],
       ),
     );
   }
@@ -132,6 +132,22 @@ class _EmbarkState extends State<Embark>{
 	);
       });
     }
+  }
+
+  marker_stream() async{
+    marker_data = FirebaseFirestore.instance.collection('location').doc(FirebaseAuth.instance.currentUser.uid).snapshots().listen((snapshot){
+      setState((){
+	snapshot.data().forEach((k,v){
+	  marker_list.add(
+	    Marker(
+	      markerId: MarkerId('$k'), 
+	      position: LatLng(v[0], v[1]), 
+	      onTap: (){
+	      }
+          ));
+        });
+      });
+    });
   }
 
   users_location() async{
