@@ -15,8 +15,10 @@ class Embark extends StatefulWidget{
 
 class _EmbarkState extends State<Embark>{
   Set<Marker> marker_list = new Set();
+  List<String> marker_id_list;
   var marker_data;
   var location_data;
+  bool marker_tapped = false;
   double lat;
   double long;
   GoogleMapController _controller;
@@ -65,6 +67,11 @@ class _EmbarkState extends State<Embark>{
 		zoom: 18,
 	      ),
 	      markers: marker_list, 
+	      onTap: (value){
+		setState((){
+		  marker_tapped = false;
+	        });
+	      }
 	    ),
 	  ),
 	  Positioned(
@@ -106,6 +113,23 @@ class _EmbarkState extends State<Embark>{
 	      ),
 	    ),
 	  ),
+	  marker_tapped ?
+	      Positioned(
+		bottom: 260,
+		left: 10,
+		child: ConstrainedBox(
+		  constraints: BoxConstraints.tightFor(width: 70, height: 70),
+		  child: ElevatedButton(
+		    style: ElevatedButton.styleFrom(
+		      shape: CircleBorder(),
+		      primary: Colors.red[700],
+		    ),
+		    child: Icon(Icons.delete, size: 35,),
+		    onPressed: (){
+		    }
+		  ),
+		),
+	      ) : SizedBox(),
 	],
       ),
     );
@@ -137,15 +161,31 @@ class _EmbarkState extends State<Embark>{
   marker_stream() async{
     marker_data = FirebaseFirestore.instance.collection('location').doc(FirebaseAuth.instance.currentUser.uid).snapshots().listen((snapshot){
       setState((){
-	snapshot.data().forEach((k,v){
+	for(MapEntry e in snapshot.data().entries){
+	  marker_list.add(
+	    Marker(
+	      markerId: MarkerId('$e.key'), 
+	      position: LatLng(e.value[0], e.value[1]), 
+	      onTap: (){
+		setState((){
+		  marker_tapped = true;
+		});
+	      }
+	    )
+	  );
+        }
+	/*snapshot.data().forEach((k,v){
 	  marker_list.add(
 	    Marker(
 	      markerId: MarkerId('$k'), 
 	      position: LatLng(v[0], v[1]), 
 	      onTap: (){
+		setState((){
+		  marker_tapped = true;
+	        });
 	      }
           ));
-        });
+        });*/
       });
     });
   }
