@@ -41,3 +41,9 @@ update_username(username){ //This is used to set the user's username. When they 
      print("Success");
    });
 }
+
+delete_field(id){
+  location.doc(firebaseAuth.currentUser.uid).update({"$id": FieldValue.delete()}).then((_){
+    print("Success");
+  });
+}

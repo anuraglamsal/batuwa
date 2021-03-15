@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../../../Cloud_Firestore/cloud.dart';
 import 'dart:async';
 import 'save.dart';
 
@@ -15,7 +16,7 @@ class Embark extends StatefulWidget{
 
 class _EmbarkState extends State<Embark>{
   Set<Marker> marker_list = new Set();
-  List<String> marker_id_list;
+  String pressed_marker_id;
   var marker_data;
   var location_data;
   bool marker_tapped = false;
@@ -31,7 +32,6 @@ class _EmbarkState extends State<Embark>{
   @override 
   void initState(){
     super.initState();
-    users_location();
     location_stream();
     marker_stream();
   }
@@ -66,6 +66,8 @@ class _EmbarkState extends State<Embark>{
 		target: LatLng(lat, long),
 		zoom: 18,
 	      ),
+	      myLocationEnabled: true,
+	      myLocationButtonEnabled: false,
 	      markers: marker_list, 
 	      onTap: (value){
 		setState((){
@@ -126,6 +128,8 @@ class _EmbarkState extends State<Embark>{
 		    ),
 		    child: Icon(Icons.delete, size: 35,),
 		    onPressed: (){
+		      delete_field(pressed_marker_id);
+		      marker_tapped = false;
 		    }
 		  ),
 		),
@@ -160,6 +164,7 @@ class _EmbarkState extends State<Embark>{
 
   marker_stream() async{
     marker_data = FirebaseFirestore.instance.collection('location').doc(FirebaseAuth.instance.currentUser.uid).snapshots().listen((snapshot){
+      marker_list.clear();
       setState((){
 	for(MapEntry e in snapshot.data().entries){
 	  marker_list.add(
@@ -168,6 +173,7 @@ class _EmbarkState extends State<Embark>{
 	      position: LatLng(e.value[0], e.value[1]), 
 	      onTap: (){
 		setState((){
+		  pressed_marker_id = e.key;
 		  marker_tapped = true;
 		});
 	      }
@@ -190,23 +196,12 @@ class _EmbarkState extends State<Embark>{
     });
   }
 
-  users_location() async{
-    Position _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    print(_position);
-    setState((){
-      lat = _position.latitude;
-      long = _position.longitude;
-    });
-  }
-
   location_stream() {
     location_data = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high).listen((Position _position){
-      if(_position.latitude >= lat+0.00001 || _position.latitude <= lat-0.00001){
-	setState((){
-	  lat = _position.latitude;
-	  long = _position.longitude;
-	});
-      }
+      setState((){
+	lat = _position.latitude;
+	long = _position.longitude;
+      });
     });
   }
 
