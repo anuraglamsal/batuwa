@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'Children/new_user_screen.dart';
-import 'Children/Feed/feed.dart';
-import '../Cloud_Firestore/cloud.dart';
-import 'Children/First_time_customize/new_user_username.dart';
-import 'Children/First_time_customize/new_user_prof_pic.dart';
+import '../Screens/new_user_screen.dart';
+import '../Screens/feed.dart';
+import '../Cloud/cloud.dart';
+import '../Screens/new_user_username.dart';
+import '../Screens/new_user_prof_pic.dart';
 
 class userscreen extends StatelessWidget{
   @override

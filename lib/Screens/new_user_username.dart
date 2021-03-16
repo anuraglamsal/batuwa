@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../Cloud_Firestore/cloud.dart';
+import '../Cloud/cloud.dart';
 
 //This is the screen that the user is directed to when the token is '-1'.
 class usernamescreen extends StatefulWidget{

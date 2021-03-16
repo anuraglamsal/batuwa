@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../Cloud_Firestore/cloud.dart';
+import '../Cloud/cloud.dart';
 
 //This is the page that the user is directed to when they login for the first time i.e. when their token is '1'.
 class firsttimeLogin extends StatefulWidget{

@@ -5,9 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../../../Cloud_Firestore/cloud.dart';
+import '../Cloud/cloud.dart';
 import 'dart:async';
-import 'save.dart';
+import 'save_location.dart';
 
 class Embark extends StatefulWidget{
   @override
@@ -15,29 +15,30 @@ class Embark extends StatefulWidget{
 }
 
 class _EmbarkState extends State<Embark>{
-  Set<Marker> marker_list = new Set();
-  String pressed_marker_id;
-  var marker_data;
-  var location_data;
-  bool marker_tapped = false;
-  double lat;
-  double long;
-  GoogleMapController _controller;
+  Set<Marker> marker_list = new Set(); //This stores all the markers to show on the map.
+  String pressed_marker_id; //This stores the id of the marker tapped.
+  var marker_data; //This variable consits of the stream that fetches stored locations from firestore.
+  var location_data; //This variable consists of the stream that fetches real time location of the user.
+  bool marker_tapped = false; //This bool deals with the widgets to show when a marker is tapped.
+  double lat; //This stores latitude of the current location of the user.
+  double long; //This stores longitude of the current location of the user.
+  GoogleMapController _controller; //This allows us to control the map.
   @override
-  void dispose(){
-    location_data.cancel();
+  void dispose(){ //Here, we just unsubscribe from subscribed streams as this frees up memory when the widget is not in use.
+    location_data.cancel(); 
     marker_data.cancel();
     super.dispose();
   }
   @override 
   void initState(){
     super.initState();
-    location_stream();
-    marker_stream();
+    location_stream(); //This stream constantly updates the latitude and longitude of the user.
+    marker_stream(); //This stream constantly updates marker_list by fetching stored locations in real time.
   }
   @override
   Widget build(BuildContext context){
-    if(lat==null){
+    if(lat==null){ //If the latitude variable is null, this means that the 'location_stream' stream is still being subscribed to. Thus, until this 
+      	           //happens, we show an indicator.	
       return Container(
 	alignment: Alignment.center,
 	color: Color(0xff0e0f26),
@@ -50,33 +51,35 @@ class _EmbarkState extends State<Embark>{
     }
     return Container(
       alignment: Alignment.center,
-      child: Stack(
+      child: Stack( //Using stack as we want to stack widgets on top of the map.
 	children: [
 	  SizedBox(height: 50),
 	  Container(
-	    height: double.infinity,
-	    width: double.infinity,
+	    height: double.infinity, //This fills the entire screen with the map.
+	    width: double.infinity, //Same as above.
 	    child: GoogleMap(
 	      onMapCreated: (GoogleMapController controller){ //We need to provide a method in this way to onMapCreated which in return gives
-		//us a "controller" that can be used to control the map until it is active after 
-		//its creation. 
+		//us a "controller" that can be used to control the map.
 		_controller = controller;
 	      },
-	      initialCameraPosition: CameraPosition(
-		target: LatLng(lat, long),
-		zoom: 18,
+	      initialCameraPosition: CameraPosition( //This allows us to show which location is shown when the map is loaded for the first time.
+		target: LatLng(lat, long), //We give the current location of the user as the location to show for first-time map load.
+		zoom: 18, //This is the zoom level of the map loaded for the first time. 
 	      ),
-	      myLocationEnabled: true,
-	      myLocationButtonEnabled: false,
-	      markers: marker_list, 
-	      onTap: (value){
-		setState((){
+	      myLocationEnabled: true, //This brings a blue circle like thing on the map indicating the current location of the user.
+	      myLocationButtonEnabled: false, //This button is enabled on default when "myLocationEnabled" becomes true. But I have manually
+	       			              //disabled it here as I had already created a button that does that.
+	      markers: marker_list, //This takes in a list of markers to show on the map.
+	      onTap: (value){ //This does things when the map is tapped. 'value' has the coordinates of the tapped location on the map.
+		//When the map is tapped, I want to remove the widgets to only show when a marker is tapped (tapping on a marker and the map is not same)
+		//The 'marker_tapped' widget is used to hide/show the widgets that are related to marker taps.
+		setState((){ 
 		  marker_tapped = false;
 	        });
 	      }
 	    ),
 	  ),
-	  Positioned(
+	  Positioned( //This widget deals with moving the map camera to the current coordinates of the user's location.
 	    bottom: 100,
 	    left: 10,
 	    child: ConstrainedBox(
@@ -98,7 +101,7 @@ class _EmbarkState extends State<Embark>{
 	      ),
 	    ),
 	  ),
-	  Positioned(
+	  Positioned( //This widget deals with routing the user to the page where they save the current location.
 	    bottom: 180,
 	    left: 10,
 	    child: ConstrainedBox(
@@ -115,8 +118,8 @@ class _EmbarkState extends State<Embark>{
 	      ),
 	    ),
 	  ),
-	  marker_tapped ?
-	      Positioned(
+	  marker_tapped ? 
+	      Positioned( //This widget is shown only when a marker is tapped. This widget is used to delete the marker.
 		bottom: 260,
 		left: 10,
 		child: ConstrainedBox(

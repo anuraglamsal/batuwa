@@ -4,7 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
-import '../../../Cloud_Firestore/cloud.dart';
+import '../Cloud/cloud.dart';
 
 //This is the screen the user is sent to when the 'token' is '-2'.
 class profpicscreen extends StatefulWidget{

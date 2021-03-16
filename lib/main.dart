@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'General_Screen/homescreen.dart';
-import 'User_Screen/userscreen.dart';
+import 'Routing/homescreen.dart';
+import 'Routing/userscreen.dart';
 
 Future<void> main() async{ //You need to initialize the "main" function in this particular manner for Firebase to be initialized.
   WidgetsFlutterBinding.ensureInitialized();//Required to initialize Firebase.

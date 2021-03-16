@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Children/signupform.dart';
-import 'Children/signinform.dart';
+import '../Screens/signupform.dart';
+import '../Screens/signinform.dart';
 
 class home extends StatefulWidget{ //"home" is stateful because "BottomNavigationBar" is being used.
   @override
