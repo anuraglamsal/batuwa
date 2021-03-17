@@ -58,4 +58,16 @@ Potential Features:
 	  firebase with the field name as the UUID. This allows for relatively easy deletion of locations if the user
 	  wants to do so. Creation isn't to unituitive, and read and update also shouldn't be too difficult. 
 
+	  ------------------------- * ----------------------------------
+
+	  Creating a follow system:
+
+	  1.) When a user follows another user, the uid of the follower is stored into the "followers" collection of the followed user, and 
+	      the uid of the followed person is stored into the "following" collection of the follower.
+  	  2.) Now, each time a user adds a location, that location is saved in the "following" collection of all the followers of that user
+	      inside the document whose name is the "uid" of the user.
+	  3.) Now, we subscribe to a stream that brings all documents in the "following" collection, thus, each time something changes, we
+	      update the marker_list. For example, if a user follows someone and that someone adds a new location, the stream updates and thus,
+	      the marker list updates too.  
+
 	   

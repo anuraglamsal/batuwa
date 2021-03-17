@@ -103,6 +103,9 @@ class _profpicscreenState extends State<profpicscreen>{
     if(permissionStatus.isGranted){
       image = await _picker.getImage(source: ImageSource.gallery);
       if(image != null){
+	setState((){
+	  next = false;
+        });
 	var snapshot = await _storage.ref()
 	    .child('ProfPic/${FirebaseAuth.instance.currentUser.uid.toString()}')
 	    .putFile(File(image.path));
@@ -119,20 +122,25 @@ class _profpicscreenState extends State<profpicscreen>{
 
   getImageUrl() async{//This gets the profile picture associated with the logged in user. To fully understand this, read this doc: 
     		      //https://firebase.flutter.dev/docs/storage/usage.
+    bool flag = true;
     try{
       imageUrl = await firebase_storage.FirebaseStorage.instance.ref('ProfPic/${FirebaseAuth.instance.currentUser.uid.toString()}').getDownloadURL();
       //'The "FirebaseAuth.instance.currentUser.uid" method fetches the unique user id of the logged in user.
     }
     catch(e){
+      flag = false;
       setState((){//The widget is rebuilt when the url for the profile image is fetched.
 	indicator = false;
 	next = false;
       });
     }
-    setState((){
-      indicator = false;
-      next = true;
-    });
+    if(flag){
+      save_image_url(imageUrl);
+      setState((){
+	indicator = false;
+	next = true;
+      });
+    }
   }
 
 }

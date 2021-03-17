@@ -18,6 +18,7 @@ firsttimelogin(int token){ //Watch this video: "https://www.youtube.com/watch?v=
                     //iii.) If the value is '-1', then that means the user should be directed to a page where they set their unique username.
                     //iv.) If the value is '-2', then that means the user should be directed to a page where they set their profile picture.
     'username': "",
+    'profpicURL': "",
   });
 }
 
@@ -40,6 +41,12 @@ update_username(username){ //This is used to set the user's username. When they 
    users.doc(firebaseAuth.currentUser.uid).update({"username": username}).then((_){
      print("Success");
    });
+}
+
+save_image_url(imageUrl){
+  users.doc(firebaseAuth.currentUser.uid).update({"profpicURL": imageUrl}).then((_){
+    print("Success");
+  });
 }
 
 delete_field(id){
