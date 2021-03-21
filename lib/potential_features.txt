@@ -1,3 +1,10 @@
+Important thing rn: 
+
+* What to show in a post before clicking see more, and what should a full post be like? 
+* What things should the full post contain? 
+
+
+
 I'll firstly work on searching for a user on the app. What factors are important to show relevant users when you enter something in the search field? 
 Maybe:
               * The people that they already follow,
@@ -69,5 +76,11 @@ Potential Features:
 	  3.) Now, we subscribe to a stream that brings all documents in the "following" collection, thus, each time something changes, we
 	      update the marker_list. For example, if a user follows someone and that someone adds a new location, the stream updates and thus,
 	      the marker list updates too.  
+
+	     *********************************
+
+	     * Along with a location, there should also be some written posts about the location. I'll first work on 
+	       where to save those posts and how to fetch them. (Firestore or firebase storage ? )
+
 
 	   

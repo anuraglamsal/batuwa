@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../Cloud/cloud.dart';
 import 'dart:async';
 import 'save_location.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class Embark extends StatefulWidget{
   @override
@@ -16,10 +17,13 @@ class Embark extends StatefulWidget{
 
 class _EmbarkState extends State<Embark>{
   Set<Marker> marker_list = new Set(); //This stores all the markers to show on the map.
+  List<LatLng> polyline_points = [];
+  Set<Polyline> polyline_list = {};
   String pressed_marker_id; //This stores the id of the marker tapped.
   var marker_data; //This variable consits of the stream that fetches stored locations from firestore.
   var location_data; //This variable consists of the stream that fetches real time location of the user.
   bool marker_tapped = false; //This bool deals with the widgets to show when a marker is tapped.
+  bool recording_started = false;
   double lat; //This stores latitude of the current location of the user.
   double long; //This stores longitude of the current location of the user.
   GoogleMapController _controller; //This allows us to control the map.
@@ -70,6 +74,7 @@ class _EmbarkState extends State<Embark>{
 	      myLocationButtonEnabled: false, //This button is enabled on default when "myLocationEnabled" becomes true. But I have manually
 	       			              //disabled it here as I had already created a button that does that.
 	      markers: marker_list, //This takes in a list of markers to show on the map.
+	      polylines: polyline_list,
 	      onTap: (value){ //This does things when the map is tapped. 'value' has the coordinates of the tapped location on the map.
 		//When the map is tapped, I want to remove the widgets to only show when a marker is tapped (tapping on a marker and the map is not same)
 		//The 'marker_tapped' widget is used to hide/show the widgets that are related to marker taps.
@@ -118,9 +123,43 @@ class _EmbarkState extends State<Embark>{
 	      ),
 	    ),
 	  ),
+	  Positioned(
+	    bottom: 260,
+	    left: 10,
+	    child: ConstrainedBox(
+	      constraints: BoxConstraints.tightFor(width: 70, height: 70),
+	      child: ElevatedButton(
+		style: ElevatedButton.styleFrom(
+		  shape: CircleBorder(),
+		  primary: Colors.red[700],
+		),
+		child: !recording_started ? Icon(Icons.fiber_manual_record_sharp, size: 35,) : Icon(Icons.stop, size: 35,),
+		onPressed:(){
+		  setState((){
+		    if(recording_started){
+		      recording_started = false;
+		      polyline_points.clear();
+		      polyline_list.clear();
+		    }
+		    else{
+		      recording_started = true;
+		      polyline_list.add(
+			Polyline(
+			  polylineId: PolylineId("Test",),
+			  points: polyline_points,
+			  width: 4,
+			  color: Colors.purple,
+			),
+		      );
+		    }
+		  });
+	        },
+	      ),
+	    ),
+	  ),
 	  marker_tapped ? 
 	      Positioned( //This widget is shown only when a marker is tapped. This widget is used to delete the marker.
-		bottom: 260,
+		bottom: 340,
 		left: 10,
 		child: ConstrainedBox(
 		  constraints: BoxConstraints.tightFor(width: 70, height: 70),
@@ -195,6 +234,9 @@ class _EmbarkState extends State<Embark>{
       setState((){
 	lat = _position.latitude;
 	long = _position.longitude;
+	if(recording_started){
+	  polyline_points.add(LatLng(lat, long));
+        }
       });
     });
   }
