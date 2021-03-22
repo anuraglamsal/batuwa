@@ -10,6 +10,15 @@ import 'dart:async';
 import 'save_location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
+class Map_Screen extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      body: Embark(),
+    );
+  }
+}
+
 class Embark extends StatefulWidget{
   @override
   _EmbarkState createState() => _EmbarkState();
@@ -138,6 +147,7 @@ class _EmbarkState extends State<Embark>{
 		  setState((){
 		    if(recording_started){
 		      recording_started = false;
+		      _controller.moveCamera(CameraUpdate.zoomTo(15));
 		      polyline_points.clear();
 		      polyline_list.clear();
 		    }
@@ -172,10 +182,33 @@ class _EmbarkState extends State<Embark>{
 		    onPressed: (){
 		      delete_field(pressed_marker_id);
 		      marker_tapped = false;
-		    }
+		    },
 		  ),
 		),
 	      ) : SizedBox(),
+	  //save_route_widgets ?
+	      Positioned(
+		bottom: 15,
+		left: 28,
+		child: Container(
+		  height: 50,
+		  width: 370,
+		  decoration: BoxDecoration(
+		    color: Color(0xff9c99ff),
+		    borderRadius: BorderRadius.all(Radius.circular(15)),
+		  ),
+		  child: Row(
+		    //mainAxisAlignment: MainAxisAlignment.,
+		    children: [
+		      SizedBox(width: 10),
+		      Text(
+			"Do you want to save the location?",
+			style: TextStyle(fontSize: 18, color: Colors.white, fontFamily: "Mohave"),
+		      ),
+		  ],
+		),
+	      ),
+	    ),
 	],
       ),
     );

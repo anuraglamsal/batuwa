@@ -91,7 +91,7 @@ class _normalscreenState extends State<normalscreen>{
 		    onPressed: (){
 		      Navigator.push(
 			context,
-			MaterialPageRoute(builder: (context) => Embark()), //This routes us to the map screen.
+			MaterialPageRoute(builder: (context) => Map_Screen()), //This routes us to the map screen.
 		      );
 		    },
 		  ),
