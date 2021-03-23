@@ -8,7 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../Cloud/cloud.dart';
 import 'dart:async';
 import 'save_location.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+//import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class Map_Screen extends StatelessWidget{
   @override
@@ -33,6 +33,7 @@ class _EmbarkState extends State<Embark>{
   var location_data; //This variable consists of the stream that fetches real time location of the user.
   bool marker_tapped = false; //This bool deals with the widgets to show when a marker is tapped.
   bool recording_started = false;
+  bool save_route_widgets = false;
   double lat; //This stores latitude of the current location of the user.
   double long; //This stores longitude of the current location of the user.
   GoogleMapController _controller; //This allows us to control the map.
@@ -98,11 +99,7 @@ class _EmbarkState extends State<Embark>{
 	    left: 10,
 	    child: ConstrainedBox(
 	      constraints: BoxConstraints.tightFor(width: 70, height: 70),
-	      child: ElevatedButton(
-		style: ElevatedButton.styleFrom(
-		  shape: CircleBorder(),
-		  primary: Colors.blue,
-		),
+	      child: FloatingActionButton(
 		child: Icon(Icons.location_pin, size: 40,),
 		onPressed: (){
 		  _controller.moveCamera(CameraUpdate.newLatLng(LatLng(lat, long)));//This update's the map's camera to the given latitude and longitude.
@@ -120,14 +117,11 @@ class _EmbarkState extends State<Embark>{
 	    left: 10,
 	    child: ConstrainedBox(
 	      constraints: BoxConstraints.tightFor(width: 70, height: 70),
-	      child: ElevatedButton(
-		style: ElevatedButton.styleFrom(
-		  shape: CircleBorder(),
-		  primary: Colors.purple,
-		),
+	      child: FloatingActionButton(
+		backgroundColor: Colors.purple,
 		child: Icon(Icons.save, size: 35,),
 		onPressed: (){
-		  route_to_save(context);
+		  route_to_save(context, null);
 	        }
 	      ),
 	    ),
@@ -137,19 +131,18 @@ class _EmbarkState extends State<Embark>{
 	    left: 10,
 	    child: ConstrainedBox(
 	      constraints: BoxConstraints.tightFor(width: 70, height: 70),
-	      child: ElevatedButton(
-		style: ElevatedButton.styleFrom(
-		  shape: CircleBorder(),
-		  primary: Colors.red[700],
-		),
+	      child: FloatingActionButton(
+		backgroundColor: Colors.red,
 		child: !recording_started ? Icon(Icons.fiber_manual_record_sharp, size: 35,) : Icon(Icons.stop, size: 35,),
 		onPressed:(){
 		  setState((){
 		    if(recording_started){
 		      recording_started = false;
+		      save_route_widgets = true;
 		      _controller.moveCamera(CameraUpdate.zoomTo(15));
-		      polyline_points.clear();
-		      polyline_list.clear();
+		      //route_to_save(context, polyline_list.first);
+		      //polyline_points.clear();
+		      //polyline_list.clear();
 		    }
 		    else{
 		      recording_started = true;
@@ -173,11 +166,7 @@ class _EmbarkState extends State<Embark>{
 		left: 10,
 		child: ConstrainedBox(
 		  constraints: BoxConstraints.tightFor(width: 70, height: 70),
-		  child: ElevatedButton(
-		    style: ElevatedButton.styleFrom(
-		      shape: CircleBorder(),
-		      primary: Colors.red[700],
-		    ),
+		  child: FloatingActionButton(
 		    child: Icon(Icons.delete, size: 35,),
 		    onPressed: (){
 		      delete_field(pressed_marker_id);
@@ -186,13 +175,13 @@ class _EmbarkState extends State<Embark>{
 		  ),
 		),
 	      ) : SizedBox(),
-	  //save_route_widgets ?
+	  save_route_widgets ?
 	      Positioned(
 		bottom: 15,
-		left: 28,
+		left: 21,
 		child: Container(
 		  height: 50,
-		  width: 370,
+		  width: 350,
 		  decoration: BoxDecoration(
 		    color: Color(0xff9c99ff),
 		    borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -200,24 +189,53 @@ class _EmbarkState extends State<Embark>{
 		  child: Row(
 		    //mainAxisAlignment: MainAxisAlignment.,
 		    children: [
-		      SizedBox(width: 10),
+		      SizedBox(width: 23),
 		      Text(
-			"Do you want to save the location?",
+			"Do you want to save the path?",
 			style: TextStyle(fontSize: 18, color: Colors.white, fontFamily: "Mohave"),
 		      ),
-		  ],
+		      SizedBox(width: 15),
+		      Container(
+			height: 30, 
+			width: 30,
+			child: FloatingActionButton(
+			  backgroundColor: Colors.green[200],
+			  onPressed: (){
+			    setState((){
+			      save_route_widgets = false;
+			    });
+			    route_to_save(context, polyline_list.first);
+			  },
+		  	  child: Icon(Icons.check,),
+		        ),
+		      ),
+		      SizedBox(width: 15),
+		      Container(
+			height: 30, 
+			width: 30,
+			child: FloatingActionButton(
+			  backgroundColor: Colors.red[300],
+			  onPressed: (){
+			    setState((){
+			      save_route_widgets = false;
+			    });
+			  },
+			  child: Icon(Icons.close,),
+			),
+		      ),
+		    ],
+		  ),
 		),
-	      ),
-	    ),
-	],
-      ),
-    );
-  }
+	      ) : SizedBox(),
+	    ],
+	  ),
+	);
+      }
 
-  route_to_save(BuildContext context) async{
+  route_to_save(BuildContext context, polyline) async{
     final _result = await Navigator.push( 
       context,
-      MaterialPageRoute(builder: (context) => savescreen(lat, long)),
+      MaterialPageRoute(builder: (context) => savescreen(lat, long, polyline)),
     );
     //After you pop out of the travelled route, the code below is run to show a dialog box that says "Location Saved"
     if(_result != null){

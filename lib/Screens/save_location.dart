@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../Cloud/cloud.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class savescreen extends StatefulWidget{
   final double lat;
   final double long;
-  const savescreen(this.lat, this.long);
+  final Polyline polyline;
+  const savescreen(this.lat, this.long, this.polyline);
   @override
   _savescreenState createState() => _savescreenState();
 }
@@ -89,7 +91,7 @@ class _savescreenState extends State<savescreen>{
 			setState((){
 			  circle = true;
 			});
-			send_location(widget.lat, widget.long, name.text);
+			send_location(widget.lat, widget.long, name.text, widget.polyline);
 		      }
 		    },
 		    child: Text(
@@ -107,8 +109,9 @@ class _savescreenState extends State<savescreen>{
     );
   }
 
-  send_location(lat, long, name){
-    save_location(lat, long, name);
+  send_location(lat, long, name, polyline){
+    print("YOLO");
+    save_location(lat, long, name, polyline);
     Navigator.pop(context, 'Location saved'); //The thing beside context is sent to the route that this route was navigated from.
   }
 
