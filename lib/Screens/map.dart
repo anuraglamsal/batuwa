@@ -26,10 +26,13 @@ class Embark extends StatefulWidget{
 
 class _EmbarkState extends State<Embark>{
   Set<Marker> marker_list = new Set(); //This stores all the markers to show on the map.
+  List<LatLng> polyline_points_saving = [];
   List<LatLng> polyline_points = [];
   Set<Polyline> polyline_list = {};
   String pressed_marker_id; //This stores the id of the marker tapped.
+  String pressed_polyline_id;
   var marker_data; //This variable consits of the stream that fetches stored locations from firestore.
+  var polyline_data;
   var location_data; //This variable consists of the stream that fetches real time location of the user.
   bool marker_tapped = false; //This bool deals with the widgets to show when a marker is tapped.
   bool recording_started = false;
@@ -41,6 +44,7 @@ class _EmbarkState extends State<Embark>{
   void dispose(){ //Here, we just unsubscribe from subscribed streams as this frees up memory when the widget is not in use.
     location_data.cancel(); 
     marker_data.cancel();
+    polyline_data.cancel();
     super.dispose();
   }
   @override 
@@ -48,6 +52,7 @@ class _EmbarkState extends State<Embark>{
     super.initState();
     location_stream(); //This stream constantly updates the latitude and longitude of the user.
     marker_stream(); //This stream constantly updates marker_list by fetching stored locations in real time.
+    polyline_stream();
   }
   @override
   Widget build(BuildContext context){
@@ -94,6 +99,23 @@ class _EmbarkState extends State<Embark>{
 	      }
 	    ),
 	  ),
+	  /*Positioned(
+	    right: 0,
+	    child: FloatingActionButton(
+	      onPressed: (){
+		FirebaseFirestore.instance.collection('location').doc(
+		polyline_points.clear();
+		polyline_points.add(
+		  Polyline(
+		    polylineId: PolylineId("Test",),
+		    points: polyline_points,
+		    width: 4,
+		    color: Colors.purple,
+		  ),
+		),
+	      },
+	    ),
+	  ),*/
 	  Positioned( //This widget deals with moving the map camera to the current coordinates of the user's location.
 	    bottom: 100,
 	    left: 10,
@@ -149,7 +171,7 @@ class _EmbarkState extends State<Embark>{
 		      polyline_list.add(
 			Polyline(
 			  polylineId: PolylineId("Test",),
-			  points: polyline_points,
+			  points: polyline_points_saving,
 			  width: 4,
 			  color: Colors.purple,
 			),
@@ -169,7 +191,12 @@ class _EmbarkState extends State<Embark>{
 		  child: FloatingActionButton(
 		    child: Icon(Icons.delete, size: 35,),
 		    onPressed: (){
-		      delete_field(pressed_marker_id);
+		      if(pressed_marker_id == null){
+			delete_polyline_field(pressed_polyline_id);
+		      }
+		      else{
+			delete_location_field(pressed_marker_id);
+		      }
 		      marker_tapped = false;
 		    },
 		  ),
@@ -204,7 +231,11 @@ class _EmbarkState extends State<Embark>{
 			    setState((){
 			      save_route_widgets = false;
 			    });
-			    route_to_save(context, polyline_list.first);
+			    List<GeoPoint> points = [];
+			    for(int i=0; i<polyline_points_saving.length; ++i){
+			      points.add(GeoPoint(polyline_points_saving[i].latitude, polyline_points_saving[i].longitude));
+			    }
+			    route_to_save(context, points);
 			  },
 		  	  child: Icon(Icons.check,),
 		        ),
@@ -255,6 +286,32 @@ class _EmbarkState extends State<Embark>{
     }
   }
 
+  polyline_stream() async{
+    polyline_data = FirebaseFirestore.instance.collection('polylines').doc(FirebaseAuth.instance.currentUser.uid).snapshots().listen((snapshot){
+      for(MapEntry e in snapshot.data().entries){
+	polyline_points.clear();
+	for(int i=0; i<e.value.length; ++i){
+	  polyline_points.add(LatLng(e.value[i].latitude, e.value[i].longitude));
+        }
+	polyline_list.add(
+	  Polyline(
+	    polylineId: PolylineId("$e.key",),
+	    points: polyline_points,
+	    width: 4,
+	    color: Colors.purple,
+	    onTap: (){
+	      setState((){
+		pressed_polyline_id = e.key;
+		pressed_marker_id = null;
+		marker_tapped = true;
+	      });
+	    },
+	  )
+	);
+      }
+    });
+  }
+
   marker_stream() async{
     marker_data = FirebaseFirestore.instance.collection('location').doc(FirebaseAuth.instance.currentUser.uid).snapshots().listen((snapshot){
       marker_list.clear();
@@ -286,7 +343,7 @@ class _EmbarkState extends State<Embark>{
 	lat = _position.latitude;
 	long = _position.longitude;
 	if(recording_started){
-	  polyline_points.add(LatLng(lat, long));
+	  polyline_points_saving.add(LatLng(lat, long));
         }
       });
     });

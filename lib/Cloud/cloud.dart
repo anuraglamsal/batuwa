@@ -6,6 +6,7 @@ final firestoreInstance = FirebaseFirestore.instance; //This instance is require
  					              //"https://firebase.flutter.dev/docs/firestore/usage/". <-- Cloud firestore documentation.
 CollectionReference users = firestoreInstance.collection('token');
 CollectionReference location = firestoreInstance.collection('location');
+CollectionReference polyline = firestoreInstance.collection('polylines');
 final firebaseAuth = FirebaseAuth.instance;
 var uuid = Uuid();
 
@@ -24,9 +25,17 @@ firsttimelogin(int token){ //Watch this video: "https://www.youtube.com/watch?v=
 
 save_location(name, lat, long){
   String id = uuid.v4();
+  print(name);
   location.doc(firebaseAuth.currentUser.uid.toString()).set({
-    '$id': [name, lat, long],
+    '$id': [lat, long, name],
   }, SetOptions(merge: true)); //This option allows us to save multiple fields in the document without replacement of fields occuring. 
+}
+
+save_polyline(polylinelul){
+  String id = uuid.v4();
+  polyline.doc(firebaseAuth.currentUser.uid.toString()).set({
+    '$id': polylinelul,
+  }, SetOptions(merge: true));
 }
 
 update_token(token){ //This updates the token talked about previously based on choices of the user. Go to this link to see how the tokens get
@@ -49,8 +58,15 @@ save_image_url(imageUrl){
   });
 }
 
-delete_field(id){
+delete_location_field(id){
   location.doc(firebaseAuth.currentUser.uid).update({"$id": FieldValue.delete()}).then((_){
+    print("Success");
+  });
+}
+
+
+delete_polyline_field(id){
+  polyline.doc(firebaseAuth.currentUser.uid).update({"$id": FieldValue.delete()}).then((_){
     print("Success");
   });
 }

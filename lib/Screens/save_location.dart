@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../Cloud/cloud.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; //Package required to use the cloud services of firebase. The package is called cloud firestore.
 
 class savescreen extends StatefulWidget{
   final double lat;
   final double long;
-  final Polyline polyline;
+  final List<GeoPoint> polyline;
   const savescreen(this.lat, this.long, this.polyline);
   @override
   _savescreenState createState() => _savescreenState();
@@ -110,8 +111,13 @@ class _savescreenState extends State<savescreen>{
   }
 
   send_location(lat, long, name, polyline){
-    print("YOLO");
-    save_location(lat, long, name, polyline);
+    if(polyline != null){
+      save_polyline(polyline);
+      save_location(name, lat, long);
+    }
+    else{
+      save_location(name, lat, long);
+    }
     Navigator.pop(context, 'Location saved'); //The thing beside context is sent to the route that this route was navigated from.
   }
 
