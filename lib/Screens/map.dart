@@ -29,6 +29,7 @@ class _EmbarkState extends State<Embark>{
   List<LatLng> polyline_points_saving = [];
   List<LatLng> polyline_points = [];
   Set<Polyline> polyline_list = {};
+  Set<Polyline> polyline_list_saving = {};
   String pressed_marker_id; //This stores the id of the marker tapped.
   String pressed_polyline_id;
   var marker_data; //This variable consits of the stream that fetches stored locations from firestore.
@@ -50,6 +51,14 @@ class _EmbarkState extends State<Embark>{
   @override 
   void initState(){
     super.initState();
+    polyline_list_saving.add(
+      Polyline(
+	polylineId: PolylineId("Test",),
+	points: polyline_points_saving,
+	width: 4,
+	color: Colors.purple,
+      )
+    );
     location_stream(); //This stream constantly updates the latitude and longitude of the user.
     marker_stream(); //This stream constantly updates marker_list by fetching stored locations in real time.
     polyline_stream();
@@ -89,7 +98,7 @@ class _EmbarkState extends State<Embark>{
 	      myLocationButtonEnabled: false, //This button is enabled on default when "myLocationEnabled" becomes true. But I have manually
 	       			              //disabled it here as I had already created a button that does that.
 	      markers: marker_list, //This takes in a list of markers to show on the map.
-	      polylines: polyline_list,
+	      polylines: polyline_list_saving,
 	      onTap: (value){ //This does things when the map is tapped. 'value' has the coordinates of the tapped location on the map.
 		//When the map is tapped, I want to remove the widgets to only show when a marker is tapped (tapping on a marker and the map is not same)
 		//The 'marker_tapped' widget is used to hide/show the widgets that are related to marker taps.
@@ -168,14 +177,6 @@ class _EmbarkState extends State<Embark>{
 		    }
 		    else{
 		      recording_started = true;
-		      polyline_list.add(
-			Polyline(
-			  polylineId: PolylineId("Test",),
-			  points: polyline_points_saving,
-			  width: 4,
-			  color: Colors.purple,
-			),
-		      );
 		    }
 		  });
 	        },
@@ -228,13 +229,14 @@ class _EmbarkState extends State<Embark>{
 			child: FloatingActionButton(
 			  backgroundColor: Colors.green[200],
 			  onPressed: (){
-			    setState((){
-			      save_route_widgets = false;
-			    });
 			    List<GeoPoint> points = [];
 			    for(int i=0; i<polyline_points_saving.length; ++i){
 			      points.add(GeoPoint(polyline_points_saving[i].latitude, polyline_points_saving[i].longitude));
 			    }
+			    setState((){
+			      polyline_points_saving.clear();
+			      save_route_widgets = false;
+			    });
 			    route_to_save(context, points);
 			  },
 		  	  child: Icon(Icons.check,),
@@ -248,6 +250,7 @@ class _EmbarkState extends State<Embark>{
 			  backgroundColor: Colors.red[300],
 			  onPressed: (){
 			    setState((){
+			      polyline_points_saving.clear();
 			      save_route_widgets = false;
 			    });
 			  },
@@ -288,16 +291,18 @@ class _EmbarkState extends State<Embark>{
 
   polyline_stream() async{
     polyline_data = FirebaseFirestore.instance.collection('polylines').doc(FirebaseAuth.instance.currentUser.uid).snapshots().listen((snapshot){
+      polyline_list.clear();
       for(MapEntry e in snapshot.data().entries){
-	polyline_points.clear();
+	List<LatLng> points = [];
 	for(int i=0; i<e.value.length; ++i){
-	  polyline_points.add(LatLng(e.value[i].latitude, e.value[i].longitude));
+	  points.add(LatLng(e.value[i].latitude, e.value[i].longitude));
         }
 	polyline_list.add(
 	  Polyline(
 	    polylineId: PolylineId("$e.key",),
-	    points: polyline_points,
-	    width: 4,
+	    consumeTapEvents: true,
+	    points: points,
+	    width: 9,
 	    color: Colors.purple,
 	    onTap: (){
 	      setState((){
@@ -309,6 +314,9 @@ class _EmbarkState extends State<Embark>{
 	  )
 	);
       }
+      setState((){
+	polyline_list_saving.addAll(polyline_list);
+      });
     });
   }
 
