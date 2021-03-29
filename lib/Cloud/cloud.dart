@@ -24,15 +24,14 @@ firsttimelogin(int token){ //Watch this video: "https://www.youtube.com/watch?v=
 }
 
 save_location(name, lat, long){
-  String id = uuid.v4();
-  print(name);
+  String id = uuid.v4(); //Generates a unique id for each location. This is one way to make deletion of locations convinient. 
   location.doc(firebaseAuth.currentUser.uid.toString()).set({
-    '$id': [lat, long, name],
+    '$id': [lat, long, name], 
   }, SetOptions(merge: true)); //This option allows us to save multiple fields in the document without replacement of fields occuring. 
 }
 
 save_polyline(polylinelul){
-  String id = uuid.v4();
+  String id = uuid.v4(); //Generates a unique id for each polyline. Same as 'save_location', this is one way to make deletion of polylines convinient.
   polyline.doc(firebaseAuth.currentUser.uid.toString()).set({
     '$id': polylinelul,
   }, SetOptions(merge: true));

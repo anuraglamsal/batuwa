@@ -33,8 +33,8 @@ class _EmbarkState extends State<Embark>{
   bool marker_tapped = false; //This bool deals with the widgets to show when a marker is tapped.
   bool recording_started = false; //This bool is 'true' if the user is recording their path.
   bool recording_just_finished = false; //This bool deals with the widgets to show when recording of the user's path has finished. 
-  double lat; //This stores latitude of the current location of the user when the map is being loaded. 
-  double long; //This stores longitude of the current location of the user when the map is being loaded. 
+  double lat; //This stores latitude of the current location of the user. It is updated all the time. 
+  double long; //This stores longitude of the current location of the user. It is updated all the time.
   double saving_lat; //This stores latitude of the location of the user where they stopped recording their path.
   double saving_long; //This stores longitude of the location of the user where they stopped recording their path.
   GoogleMapController _controller; //This variable allows us to control the map once we receive the 'controller' from 'onMapCreated' in 'GoogleMap'.
@@ -52,12 +52,11 @@ class _EmbarkState extends State<Embark>{
       Polyline(
 	polylineId: PolylineId("Test",),
 	points: polyline_points, 
-	width: 4,
+	width: 9,
 	color: Colors.purple,
       )
     );
-    //location_stream(); //This stream constantly updates the latitude and longitude of the user.
-    location_for_initial_load(); //This function updates the 'lat' and 'long' variables with the location of the user.
+    location_stream(); //This stream constantly updates the latitude and longitude of the user. They are stored in 'lat' and 'long' respectively.
     marker_stream(); //This stream constantly updates 'marker_list' by fetching data each time some change is made in the database where marker
                      //information is stored. 
     polyline_stream(); //This stream does the same as 'marker_stream' but for polylines.
@@ -120,7 +119,14 @@ class _EmbarkState extends State<Embark>{
 	      child: FloatingActionButton( //This button deals with moving the map camera to the current coordinates of the user's location.
 		child: Icon(Icons.location_pin, size: 40,),
 		onPressed: (){
-		  move_camera_to_current_location(); //This function does the moving.
+		  _controller.moveCamera(CameraUpdate.newLatLng(LatLng(lat, long)));
+		  //This update's the map's camera to the given latitude and longitude.
+		  //The "moveCamera" method takes in either normal methods or static
+		  //methods of the "CameraUpdate" class. Static methods are methods
+		  //of a class that you access through the class directly, not through an	
+		  //object of the class. For example, here, "newLatLng" is a static method
+		  //of the "CameraUpdate" class.
+
 		}
 	      ),
 	    ),
@@ -135,7 +141,9 @@ class _EmbarkState extends State<Embark>{
 		backgroundColor: Colors.purple,
 		child: Icon(Icons.save, size: 35,),
 		onPressed: (){
-		  route_to_save_location_only(context); //This function does the routing.
+		  route_to_save(context, null, lat, long);
+		  //This function does the routing. We provide 'null' to 'polyline' parameter of this method
+		  //as we are only saving a location using this button, not a polyline along with a location.
 	        }
 	      ),
 	    ),
@@ -156,12 +164,11 @@ class _EmbarkState extends State<Embark>{
 		                           //the recording.
 		      recording_started = false; //Because of the reason above, this variable is changed to false to remove all the changes made
 		                                 //when recording was going on.
-		      location_data.cancel(); //This stops the stream that constantly updates user location that is used to draw polylines in real time.
 		      recording_just_finished = true; //This variable is used to show widgets that are supposed to be shown when a recording just 
 		                                      //finishes i.e. the user just stopped recording.
-		      recording_stopped_location(); //This function saves the location right after recording is stopped so that if the user
-		                                    //chooses to save the polyline, the end location is also saved. 
-		      _controller.moveCamera(CameraUpdate.zoomTo(17));//The map's zoom level changes in hopes to show more of the polyline if the user
+		      saving_lat = lat; //Saving the latitude just after recording is finished if the user wishes to save it later.   
+		      saving_long = long;//Same as above but for longitude.
+		      _controller.moveCamera(CameraUpdate.zoomTo(17.8));//The map's zoom level changes in hopes to show more of the polyline if the user
 		                                                      //was zooming in hopes that it'll be useful to the user to make their decision
 		                			              //in regards to saving the polyline or not. 	
 		    }
@@ -169,7 +176,6 @@ class _EmbarkState extends State<Embark>{
 		      recording_started = true; //When the user pressed the button when 'recroding_started' is false, that means that the user
 		                                //wants to start the recording. Thus, this becomes true in order to add stuff pertaining to the
 		                                //recording. 
-		      location_stream(); //This constantly updates user location such that polyline drawing is possible. 
 		    }
 		  });
 	        },
@@ -273,21 +279,6 @@ class _EmbarkState extends State<Embark>{
 	);
       }
 
-  route_to_save_location_only(BuildContext context) async{ //read linearly from the start of this widget class to understand the context of this function.
-    Position position = await fetch_user_location(); //updating the 'lat' and 'long' variables. 
-    route_to_save(context, null, position.latitude, position.longitude); 
-                                             //This function does the routing. We provide 'null' to 'polyline' parameter of this method
-		   		 	     //as we are only saving a location using this button, not a polyline along with a location.
-  }
-
-  recording_stopped_location() async{
-    Position position = await fetch_user_location();
-    setState((){ //Saving the location just after recording is finished if the user wishes to save it later.   
-      saving_lat = position.latitude;
-      saving_long = position.longitude;
-    });
-  } 
-
   route_to_save(BuildContext context, polyline, lati, longi) async{ //This function routes us to the 'save_location' page. 
     final _result = await Navigator.push( 
       context,
@@ -373,36 +364,17 @@ class _EmbarkState extends State<Embark>{
     });
   }
 
-  move_camera_to_current_location() async{
-    Position position = await fetch_user_location(); //updating the 'lat' and 'long' variables.
-    _controller.moveCamera(CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)));
-                  //This update's the map's camera to the given latitude and longitude.
-		  //The "moveCamera" method takes in either normal methods or static
-		  //methods of the "CameraUpdate" class. Static methods are methods
-		  //of a class that you access through the class directly, not through an	
-		  //object of the class. For example, here, "newLatLng" is a static method
-		  //of the "CameraUpdate" class.
-  }
-  
-  location_for_initial_load() async{
-    Position position = await fetch_user_location();
-    setState((){
-      lat = position.latitude;
-      long = position.longitude;
-    });
-  }
-
-  fetch_user_location() async{
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high); //This is the method of the 'geolocator' plugin 
-     											             //that fetches current user location. 
-    return position;
-  }
-
-  location_stream() {
+  location_stream() { //This stream is the thing we use to update 'lat' and 'long' all the time and to record coordinates for polyline. 
     location_data = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high).listen((Position _position){
-      setState((){
-	polyline_points.add(LatLng(_position.latitude, _position.longitude));
+      setState((){ //Here, we update the 'lat' and 'long' variables all the time. 
+	lat = _position.latitude;
+	long = _position.longitude;
       });
+      if(recording_started){ //When recording is started, we store the coordinates of the user constantly in 'polyline_points'.
+	setState((){
+	  polyline_points.add(LatLng(_position.latitude, _position.longitude));
+	});
+      }
     });
   }
 
