@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../Cloud/cloud.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; //Package required to use the cloud services of firebase. The package is called cloud firestore.
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class savescreen extends StatefulWidget{
   //We list the things that are sent when we route to this page from another page. 
@@ -76,7 +77,40 @@ class _savescreenState extends State<savescreen>{
 		),
 	      ),
 	    ),
+	    SizedBox(height: 20),
+	    Container(
+	      height: 55,
+	      width: 150,
+	      alignment: Alignment.center,
+	      decoration: BoxDecoration(
+		color: Color(0xff2c334f),
+		borderRadius: BorderRadius.all(Radius.circular(15)),
+	      ),
+	      child: Text(
+		"Ease of journey", 
+		textAlign: TextAlign.center,
+		style: TextStyle(fontSize: 21, color: Colors.white, fontFamily: 'Mohave',),
+	      ),
+	    ),
+	    SizedBox(height: 18),
+	    Text("In terms of rating:", style: TextStyle(color: Colors.blue[300],),),
 	    SizedBox(height: 15),
+	    RatingBar.builder(
+	      initialRating: 3,
+	      minRating: 1,
+	      direction: Axis.horizontal,
+	      allowHalfRating: true,
+	      itemCount: 5,
+	      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+	      itemBuilder: (context, _) => Icon(
+		Icons.star,
+		color: Colors.blue,
+	      ),
+	      onRatingUpdate: (rating) {
+		print(rating);
+	      },
+	    ),
+	    SizedBox(height: 400),
 	    Container(
 	      height: 42, 
 	      child: RaisedButton(
