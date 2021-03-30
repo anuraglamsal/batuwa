@@ -17,7 +17,9 @@ class savescreen extends StatefulWidget{
 
 class _savescreenState extends State<savescreen>{
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  GlobalKey<FormState> formkey_2 = GlobalKey<FormState>();
   TextEditingController name = TextEditingController();
+  TextEditingController ease_of_journey_desc = TextEditingController();
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -38,7 +40,7 @@ class _savescreenState extends State<savescreen>{
 	color: Color(0xff0e0f26),
 	child: Column(
 	  children: [
-	    SizedBox(height: 20),
+	    SizedBox(height: 30),
 	    Container(
 	      height: 60,
 	      width: 370,
@@ -77,7 +79,7 @@ class _savescreenState extends State<savescreen>{
 		),
 	      ),
 	    ),
-	    SizedBox(height: 20),
+	    SizedBox(height: 30),
 	    Container(
 	      height: 55,
 	      width: 150,
@@ -92,7 +94,7 @@ class _savescreenState extends State<savescreen>{
 		style: TextStyle(fontSize: 21, color: Colors.white, fontFamily: 'Mohave',),
 	      ),
 	    ),
-	    SizedBox(height: 18),
+	    SizedBox(height: 23),
 	    Text("In terms of rating:", style: TextStyle(color: Colors.blue[300],),),
 	    SizedBox(height: 15),
 	    RatingBar.builder(
@@ -106,22 +108,69 @@ class _savescreenState extends State<savescreen>{
 		Icons.star,
 		color: Colors.blue,
 	      ),
+	      unratedColor: Colors.blueGrey[100],
 	      onRatingUpdate: (rating) {
 		print(rating);
 	      },
 	    ),
-	    SizedBox(height: 400),
+	    SizedBox(height: 10),
+	    Opacity(
+	      opacity: 0.5,
+	      child: Text("Relatively near 5 stars = relatively easy", style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic,),),
+	    ),
+	    Opacity(
+	      opacity: 0.5,
+	      child: Text("Relatively near 1 star = relatively hard", style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic,),),
+	    ),
+	    SizedBox(height: 22),
+	    Text("In terms of description:", style: TextStyle(color: Colors.blue[300],),),
+	    SizedBox(height: 23),
+	    Form(
+	      key: formkey_2,
+	      child: Container(
+		width: 350,
+		child: TextFormField(
+		  style: TextStyle(color: Colors.white,),
+		  maxLines: 10,
+		  controller: ease_of_journey_desc,
+		  decoration: InputDecoration(
+		    enabledBorder: OutlineInputBorder(
+		      borderSide: BorderSide(
+			color: Color(0xff434a66),
+		      ),
+		    ),
+		    focusedBorder: OutlineInputBorder(
+		      borderSide: BorderSide(
+			color: Colors.blueGrey,
+		      ),
+		    ),
+		  ),
+		  cursorColor: Colors.blueGrey,
+		  validator: (value){
+		    if(value.length > 500){
+		      return "The maximum number of characters is 500!";
+		    }
+		  }
+		),
+	      ),
+	    ),
+	    SizedBox(height: 10),
+	    Opacity(
+	      opacity: 0.5,
+	      child: Text("Maximum number of characters is 500.", style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic,),),
+	    ),
+	    SizedBox(height: 25),
 	    Container(
 	      height: 42, 
 	      child: RaisedButton(
-		color: Color(0xff2c334f),
+		color: Colors.blue,
 		onPressed: () {
-		  if(formkey.currentState.validate()){  
+		  if(formkey.currentState.validate() && formkey_2.currentState.validate()){  
 		    send_location(widget.lat, widget.long, name.text, widget.polyline);
 		  }
 		},
 		child: Text(
-		  "Save",
+		  "Next",
 		  style: TextStyle(fontSize: 18.7, color: Colors.white, fontFamily: 'Mohave'),
 		),
 		shape: RoundedRectangleBorder(

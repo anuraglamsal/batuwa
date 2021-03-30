@@ -286,6 +286,7 @@ class _EmbarkState extends State<Embark>{
                                                                                   //evidently going to be latitude, longitude and polyline if intended.
     );
     //After you pop out of the travelled route, the code below is run to show a dialog box that says "Location Saved"
+    print(_result);
     if(_result != null){
       return showDialog(context: context, builder: (context){
 	return AlertDialog(
