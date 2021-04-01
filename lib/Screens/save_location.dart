@@ -120,7 +120,7 @@ class _savescreenState extends State<savescreen>{
 		  Text("In terms of rating:", style: TextStyle(color: Colors.blue[300],),),
 		  SizedBox(height: 15),
 		  RatingBar.builder(
-		    initialRating: 3,
+		    initialRating: 2.5,
 		    minRating: 1,
 		    direction: Axis.horizontal,
 		    allowHalfRating: true,
@@ -173,59 +173,64 @@ class _savescreenState extends State<savescreen>{
 		      setState((){
 			isKeyboardVisible = true;
 		      });
-		      },
-		      cursorColor: Colors.blueGrey,
-		      validator: (value){
-			if(value.length > 500){
-			  return "The maximum number of characters is 500!";
-			}
-		      }
-		    ),
-		  ),
-		),
-		SizedBox(height: 10),
-		Opacity(
-		  opacity: 0.5,
-		  child: Text("Maximum number of characters is 500.", style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic,),),
-		),
-		SizedBox(height: 25),
-		Container(
-		  height: 42, 
-		  child: RaisedButton(
-		    color: Colors.blue,
-		    onPressed: () {
-		      if(formkey.currentState.validate() && formkey_2.currentState.validate()){  
-			//send_location(widget.lat, widget.long, name.text, widget.polyline);
-			Navigator.push(
-			  context,
-			  MaterialPageRoute(builder: (context) => save_screen_2(
-			    widget.lat,
-			    widget.long,
-			    ease_of_journey_desc.text,
-			    name.text,
-			    _rating,
-			    widget.polyline,
-			  )),
-			);
-		      }
 		    },
-		    child: Text(
-		      "Next",
-		      style: TextStyle(fontSize: 18.7, color: Colors.white, fontFamily: 'Mohave'),
-		    ),
-		    shape: RoundedRectangleBorder(
-		      borderRadius: BorderRadius.circular(10.0),
-		    ),
+		    cursorColor: Colors.blueGrey,
+		    validator: (value){
+		      if(value.length > 500){
+			return "The maximum number of characters is 500!";
+		      }
+		    }
 		  ),
 		),
-	      ],
-	    ),
+	      ),
+	      SizedBox(height: 10),
+	      Opacity(
+		opacity: 0.5,
+		child: Text("Maximum number of characters is 500.", style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic,),),
+	      ),
+	      SizedBox(height: 25),
+	      Container(
+		height: 42, 
+		child: RaisedButton(
+		  color: Colors.blue,
+		  onPressed: () {
+		    /*if(isKeyboardVisible){
+		      setState((){
+		      isKeyboardVisible = false;
+		    });
+		  }*/
+		    if(formkey.currentState.validate() && formkey_2.currentState.validate()){  
+		      //send_location(widget.lat, widget.long, name.text, widget.polyline);
+		      Navigator.push(
+			context,
+			MaterialPageRoute(builder: (context) => save_screen_2(
+			  widget.lat,
+			  widget.long,
+			  ease_of_journey_desc.text,
+			  name.text,
+			  _rating,
+			  widget.polyline,
+			)),
+		      );
+		    }
+		  },
+		  child: Text(
+		    "Next",
+		    style: TextStyle(fontSize: 18.7, color: Colors.white, fontFamily: 'Mohave'),
+		  ),
+		  shape: RoundedRectangleBorder(
+		    borderRadius: BorderRadius.circular(10.0),
+		  ),
+		),
+	      ),
+	    ],
 	  ),
-	);
-      }
+	),
+      );
+    }
 
-  /*send_location(lat, long, name, polyline){
-    if(polyline != null){ //When 'polyline' is not null, this means that the user intends to save the polyline.
+    /*send_location(lat, long, name, polyline){
+      if(polyline != null){ //When 'polyline' is not null, this means that the user intends to save the polyline.
       save_polyline(polyline); //Thus, we save the polyline.
       save_location(name, lat, long); //We also save the end location.
     }
