@@ -3,6 +3,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../Cloud/cloud.dart';
+import 'package:lottie/lottie.dart';
 
 class signupform extends StatefulWidget{//Needs to be stateful to show errors.
   @override
@@ -24,52 +25,27 @@ class _signupformState extends State<signupform>{
 	  key: formkey, 
 	  child: Container(
 	    alignment: Alignment.center, 
-	    color: Color(0xff0e0f26),
+	    color: Color(0xffffffff),
 	    child: Column(
 	      mainAxisAlignment: MainAxisAlignment.start, 
 	      children: <Widget>[
-		SizedBox(height: 10),
-		!isKeyboardVisible ? 
-		Image.asset('assets/images/logo.png', width: 300, height: 150):SizedBox(),
+		SizedBox(height: 37),
 		Container(
-		  height: 58,
-		  width: 350,
-		  alignment: Alignment.center,
-		  decoration: BoxDecoration(
-		    color: Color(0xff2c334f),
-		    borderRadius: BorderRadius.all(Radius.circular(15)),
-		  ),
-		  child: Text(
-		    "Create your account here",
-		    style: TextStyle(fontSize: 28, color: Colors.white, fontFamily: 'Mohave',),
-		  ),
-		),
-		SizedBox(height: 17),
-		Container(
-		  alignment: Alignment.center,
-		  height: 50,
-		  width: 330,
-		  decoration: BoxDecoration(
-		    color: Color(0xff252a42),
-		    borderRadius: BorderRadius.all(Radius.circular(20)),
-		  ),
-		  child: Text(
-		    "E-mail",
-		    style: TextStyle(fontSize: 19.5, color: Colors.white, fontFamily: 'Mohave'),
-		  )
-		),                                                            
-		SizedBox(height:5),
-		Container(
-		  width: 330,
+		  width: 300,
+		  color: Color(0xfff2f2f2),
 		  child:TextFormField(
 		    controller: emailController,
-		    style: TextStyle(color: Colors.white),
+		    style: TextStyle(color: Colors.black,),
 		    decoration: InputDecoration(
-		      enabledBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Color(0xff434a66)),
+		      labelText: "Email",
+		      hintText: "Email",
+		      labelStyle: TextStyle(
+			color: Color(0xff07B0B5),
 		      ),
-		      focusedBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
+		      contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
+		      border: OutlineInputBorder(),
+		      focusedBorder: OutlineInputBorder(
+			borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
 		      ),
 		    ),
 		    cursorColor: Colors.blueGrey,

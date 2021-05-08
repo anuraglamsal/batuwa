@@ -8,51 +8,38 @@ class home extends StatefulWidget{ //"home" is stateful because "BottomNavigatio
 }
 
 class _homeState extends State<home>{
-  int _currentIndex = 0; //This variable stores the indices representing the tabs.
-  final tabs = [ //The widgets that we keep inside this, in a consequential manner, are the contents of the tabs.
-    signupform(), //The first widget here is the content of the first tab.
-    signinform(), //The second widget here is the content of the second tab and so on.
-  ];
   @override
   Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-	title: Container(
-	  alignment: Alignment.center,
-	  child: Text(
-	    "batuwa",
-	    style: TextStyle(
-	      fontFamily: 'Mohave',
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+	appBar: AppBar(
+	  bottom: TabBar(
+	    indicatorColor: Color(0xff07B0B5),
+	    indicatorWeight: 3,
+	    tabs: [
+	      Tab(child: Text("SIGN UP", style: TextStyle(color: Colors.black,),),),
+	      Tab(child: Text("SIGN IN", style: TextStyle(color: Colors.black,),),),
+	    ],
+	  ),
+	  title: Container(
+	    alignment: Alignment.center,
+	    child: Text(
+	      "batuwa",
+	      style: TextStyle(
+		fontFamily: 'Mohave',
+		color: Colors.black,
+	      ),
 	    ),
 	  ),
+	  backgroundColor: Color(0xffffffff),
 	),
-	backgroundColor: Color(0xff252a42),
-      ),
-      body: tabs[_currentIndex], //This allows for "tabs" above to work. 
-      bottomNavigationBar: BottomNavigationBar(
-	currentIndex : _currentIndex, //The value of the "_currentindex" variable provided here controls what tab is opened. '0' is the leftmost 
-	                              //tab and it goes one more to the right as you increase '1' and so on similarly.
-	backgroundColor: Color(0xff252a42),
-	selectedItemColor: Colors.white,
-	unselectedItemColor: Colors.grey,
-	items: [ //These are the items in the bottom navigation bar. 
-	  BottomNavigationBarItem(
-	    icon: Icon(Icons.add_box_rounded),
-	    title: Text('Sign Up', style: TextStyle(fontFamily: 'Mohave',)),
-	    backgroundColor: Colors.blue,
-	  ),
-	  BottomNavigationBarItem(
-	    icon: Icon(Icons.account_box_rounded),
-	    title: Text('Sign In', style: TextStyle(fontFamily: 'Mohave',)),
-	    backgroundColor: Colors.blue,
-	  ),
-	],
-	onTap: (index){ //Each time you tap on a tab, the "index" here gets the index value of the tab tapped. This allows us to open contents
-	                //of that tab by changing the state of the screen by providing "_currentIndex" the tapped tab's index value. 
-	  setState((){	   
-	    _currentIndex = index;
-	  });
-        }
+	body: TabBarView(
+	  children: [
+	    signupform(),
+	    signinform(),
+	  ],
+	),
       ),
     );
   }
