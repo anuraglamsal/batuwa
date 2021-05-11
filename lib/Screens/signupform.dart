@@ -17,6 +17,30 @@ class _signupformState extends State<signupform>{
   TextEditingController emailController = TextEditingController(); 
   TextEditingController passwordController = TextEditingController(); 
   GlobalKey<FormState> formkey = GlobalKey<FormState>(); //Formkey is required for validators to work.
+  Color labelcolor1 = Color(0xff000000);
+  Color labelcolor2 = Color(0xff000000);
+  var onpressed = null;
+
+  @override
+  void initState(){
+    super.initState();
+    emailController.addListener(change_disable_or_enable);
+    passwordController.addListener(change_disable_or_enable);
+  }
+
+  change_disable_or_enable(){
+    if(emailController.text != "" && passwordController.text != ""){
+      setState((){
+	onpressed = (){};
+      });
+    }
+    else{
+      setState((){
+	onpressed = null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context){
     return KeyboardVisibilityBuilder( 
@@ -30,111 +54,109 @@ class _signupformState extends State<signupform>{
 	      mainAxisAlignment: MainAxisAlignment.start, 
 	      children: <Widget>[
 		SizedBox(height: 37),
-		Container(
-		  width: 300,
-		  color: Color(0xfff2f2f2),
-		  child:TextFormField(
-		    controller: emailController,
-		    style: TextStyle(color: Colors.black,),
-		    decoration: InputDecoration(
-		      labelText: "Email",
-		      hintText: "Email",
-		      labelStyle: TextStyle(
-			color: Color(0xff07B0B5),
+		Focus(
+		  onFocusChange: (hasFocus){
+		    setState((){
+		      labelcolor1 = hasFocus ? Color(0xff07B0B5) : Color(0xff000000);
+		    });
+		  },
+		  child: Container(
+		    width: 300,
+		    color: Color(0xfff2f2f2), //Color inside the text box.
+		    child: TextFormField(
+		      controller: emailController,
+		      style: TextStyle(color: Colors.black,),
+		      decoration: InputDecoration(
+			labelText: "Email",
+			labelStyle: TextStyle(
+			  color: labelcolor1,
+			),
+			contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
+			border: OutlineInputBorder(),
+			focusedBorder: OutlineInputBorder(
+			  borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
+			),
 		      ),
-		      contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
-		      border: OutlineInputBorder(),
-		      focusedBorder: OutlineInputBorder(
-			borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
-		      ),
-		    ),
-		    cursorColor: Colors.blueGrey,
-		    validator: (value){ 
-		      if(value.isEmpty){ 
-			remove_errors_from_screen();
-			return "Required";
-		      }
-		      else{
-			if(!EmailValidator.validate(value)){
+		      cursorColor: Colors.blueGrey,
+		      validator: (value){ 
+			if(value.isEmpty){ 
 			  remove_errors_from_screen();
-			  return "Not a valid email";
+			  return "Required";
 			}
-		      }
-		    },
-		  ),
-		),
-		SizedBox(height: 15),
-		Container(
-		  alignment: Alignment.center,
-		  height: 50,
-		  width: 330,
-		  decoration: BoxDecoration(
-		    color: Color(0xff252a42),
-		    borderRadius: BorderRadius.all(Radius.circular(20)),
-		  ),
-		  child: Text(
-		    "Password",
-		    style: TextStyle(fontSize: 19.5, color: Colors.white, fontFamily: 'Mohave'),
-		  )
-		),
-		SizedBox(height: 5),
-		Container(
-		  width: 330,
-		  child: TextFormField(
-		    controller: passwordController, 
-		    style: TextStyle(color: Colors.white),
-		    decoration: InputDecoration(
-		      errorMaxLines: 3,
-		      enabledBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Color(0xff434a66)),
-		      ),
-		      focusedBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
-		      ),
+			else{
+			  if(!EmailValidator.validate(value)){
+			    remove_errors_from_screen();
+			    return "Not a valid email";
+			  }
+			}
+		      },
 		    ),
-		    cursorColor: Colors.blueGrey,
-		    validator: (value){ 
-		      if(value.isEmpty){
-			remove_errors_from_screen();
-			return "Required";
-		      }
-		      else if(value.length<12){
-			remove_errors_from_screen();
-			return "A password of length more than or equal to 12 is required";
-		      }
-		      else if(!verifyPasswordRules(value)){
-			remove_errors_from_screen();
-			return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
-		      }
-		    },
-		    obscureText: true 
 		  ),
 		),
-		SizedBox(height: 15),
+		SizedBox(height: 20),
+		Focus(
+		  onFocusChange: (hasFocus){
+		    setState((){
+		      labelcolor2 = hasFocus ? Color(0xff07B0B5) : Color(0xff000000);
+		    });
+		  },
+		  child: Container(
+		    width: 300,
+		    color: Color(0xfff2f2f2), 
+		    child: TextFormField(
+		      controller: passwordController, 
+		      style: TextStyle(color: Colors.black),
+		      decoration: InputDecoration(
+			errorMaxLines: 3,
+			labelText: "Password",
+			labelStyle: TextStyle(
+			  color: labelcolor2,
+			),
+			contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
+			border: OutlineInputBorder(),
+			focusedBorder: OutlineInputBorder(
+			  borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
+			),
+		      ),
+		      cursorColor: Colors.blueGrey,
+		      validator: (value){ 
+			if(value.isEmpty){
+			  remove_errors_from_screen();
+			  return "Required";
+			}
+			else if(value.length<12){
+			  remove_errors_from_screen();
+			  return "A password of length more than or equal to 12 is required";
+			}
+			else if(!verifyPasswordRules(value)){
+			  remove_errors_from_screen();
+			  return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
+			}
+		      },
+		      obscureText: true 
+		    ),
+		  ),
+		),
+		SizedBox(height: 20),
 		successful ?
 		    CircularProgressIndicator(
 		      valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
 		    ) :
 		    Container(
 		      height: 42, 
-		      child: RaisedButton(
-			color: Color(0xff2c334f),
-			onPressed: () {
-			  if(formkey.currentState.validate()){ 
-			    setState((){
-			      successful = true;
-			      email_exists = false;
-			      validated = false;
-			    });
-			    registerNewUser(emailController.text, passwordController.text);
-			  }
-			},
-			child: Text(
-			  "Sign Up",
-			  style: TextStyle(fontSize: 18.7, color: Colors.white, fontFamily: 'Mohave',),
-			),
-			shape: RoundedRectangleBorder(
-			  borderRadius: BorderRadius.circular(10.0),
+		      child: ElevatedButton(
+			onPressed: onpressed,
+			child: Text("SIGN UP",),
+			style: ButtonStyle(
+			  backgroundColor:MaterialStateProperty.resolveWith<Color>(
+			    (Set<MaterialState> states) {
+			      if (states.contains(MaterialState.pressed))
+				return Color(0xff07B0B5); //On pressed color
+			      else if (states.contains(MaterialState.disabled))
+				return Color.fromRGBO(7, 176, 181, 0.2); //Disabled color
+			      return Color(0xff07B0B5); //Enabled color
+			    },
+			  ), 
 			),
 		      ),
 		    ),
