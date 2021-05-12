@@ -17,6 +17,30 @@ class _signinformState extends State<signinform>{
   TextEditingController emailController = TextEditingController(); //These controllers are used to fetch form-entered data in real-time.
   TextEditingController passwordController = TextEditingController(); 
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  Color labelcolor1 = Color(0xff000000);
+  Color labelcolor2 = Color(0xff000000);
+  var onpressed = null;
+
+  @override
+  void initState(){
+    super.initState();
+    emailController.addListener(change_disable_or_enable);
+    passwordController.addListener(change_disable_or_enable);
+  }
+
+  change_disable_or_enable(){
+    if(emailController.text != "" && passwordController.text != ""){
+      setState((){
+	onpressed = (){};
+      });
+    }
+    else{
+      setState((){
+	onpressed = null;
+      });
+    }
+  }  
+
   @override
   Widget build(BuildContext context){
     return KeyboardVisibilityBuilder( //Detects if there is keyboard on the screen. This allows us to do stuff depending upon keyboard being on 
@@ -26,128 +50,95 @@ class _signinformState extends State<signinform>{
 	  key: formkey, 
 	  child: Container(
 	    alignment: Alignment.center, 
-	    color: Color(0xff0e0f26),
+	    color: Color(0xffffffff),
 	    child: Column(
 	      mainAxisAlignment: MainAxisAlignment.start, 
 	      children: [
-		SizedBox(height: 10),
-		!isKeyboardVisible ? 
-		Image.asset('assets/images/logo2.png', width: 300, height: 150):SizedBox(), //The logo is removed when the keyboard is on screen
-		                                                                            //to allow for more space.
-		Container(
-		  height: 58,
-		  width: 350,
-		  alignment: Alignment.center,
-		  decoration: BoxDecoration(
-		    color: Color(0xff2c334f),
-		    borderRadius: BorderRadius.all(Radius.circular(15)),
-		  ),
-		  child: Text(
-		    "Access your account here",
-		    style: TextStyle(fontSize: 28, color: Colors.white, fontFamily: 'Mohave',),
-		  ),
-		),
-		SizedBox(height: 17),
-		Container(
-		  alignment: Alignment.center,
-		  height: 50,
-		  width: 330,
-		  decoration: BoxDecoration(
-		    color: Color(0xff252a42),
-		    borderRadius: BorderRadius.all(Radius.circular(20)),
-		  ),
-		  child: Text(
-		    "E-mail",
-		    style: TextStyle(fontSize: 19.5, color: Colors.white, fontFamily: 'Mohave'),
-		  )
-		),                                                            
-		SizedBox(height:5),
-		Container(
-		  width: 330,
-		  child:TextFormField(
-		    controller: emailController, 
-		    style: TextStyle(color: Colors.white),
-		    decoration: InputDecoration(
-		      enabledBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Color(0xff434a66)),
-		      ),
-		      focusedBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
-		      ),
-		    ),
-		    cursorColor: Colors.blueGrey,
-		    validator: (value){  
-		      if(value.isEmpty){
-			remove_errors_from_screen();
-			return "Required"; 
-		      }
-		      else{
-			if(!EmailValidator.validate(value)){
-			  remove_errors_from_screen();
-			  return "Not a valid email";
-			}
-		      }
-		    },
-		  ),
-		),
-		SizedBox(height: 15),
-		Container(
-		  alignment: Alignment.center,
-		  height: 50,
-		  width: 330,
-		  decoration: BoxDecoration(
-		    color: Color(0xff252a42),
-		    borderRadius: BorderRadius.all(Radius.circular(20)),
-		  ),
-		  child: Text(
-		    "Password",
-		    style: TextStyle(fontSize: 19.5, color: Colors.white, fontFamily: 'Mohave'),
-		  )
-		),
-		SizedBox(height: 5),
-		Container(
-		  width: 330,
-		  child: TextFormField(
-		    controller: passwordController, 
-		    style: TextStyle(color: Colors.white),
-		    decoration: InputDecoration(
-		      errorMaxLines: 3,
-		      enabledBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Color(0xff434a66)),
-		      ),
-		      focusedBorder: UnderlineInputBorder(
-			borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
-		      ),
-		    ),
-		    cursorColor: Colors.blueGrey,
-		    validator: (value){ 
-		      if(value.isEmpty){
-			remove_errors_from_screen();
-			return "Required";
-		      }
-		      else if(value.length<12){
-			remove_errors_from_screen();
-			return "A password of length more than or equal to 12 is required";
-		      }
-		      else if(!verifyPasswordRules(value)){
-			remove_errors_from_screen();
-			return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
-		      }
-		    },
-		    obscureText: true 
-		  ),
-		),
-		SizedBox(height: 15),
-		GestureDetector(
-		  child: Text("Forgot your password?", style: TextStyle(fontSize: 15, color: Colors.lightBlue, fontFamily: 'Mohave',)),
-		  onTap: (){
-		    Navigator.push(
-		      context, 
-		      MaterialPageRoute(builder: (context) => ForgotPassword()),
-		    );
+		SizedBox(height: 37),
+		Focus(
+		  onFocusChange: (hasFocus){
+		    setState((){
+		      labelcolor1 = hasFocus ? Color(0xff07B0B5) : Color(0xff000000);
+		    });
 		  },
+		  child: Container(
+		    width: 300,
+		    color: Color(0xfff2f2f2),
+		    child:TextFormField(
+		      controller: emailController, 
+		      style: TextStyle(color: Colors.black),
+		      decoration: InputDecoration(
+			labelText: "Email",
+			labelStyle: TextStyle(
+			  color: labelcolor1,
+			),
+			contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
+			border: OutlineInputBorder(),
+			focusedBorder: OutlineInputBorder(
+			  borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
+			),
+		      ),
+		      cursorColor: Colors.blueGrey,
+		      validator: (value){  
+			if(value.isEmpty){
+			  remove_errors_from_screen();
+			  return "Required"; 
+			}
+			else{
+			  if(!EmailValidator.validate(value)){
+			    remove_errors_from_screen();
+			    return "Not a valid email";
+			  }
+			}
+		      },
+		    ),
+		  ),
 		),
-		SizedBox(height: 15),
+		SizedBox(height: 20),
+		Focus(
+		  onFocusChange: (hasFocus){
+		    setState((){
+		      labelcolor2 = hasFocus ? Color(0xff07B0B5) : Color(0xff000000);
+		    });
+		  },
+		  child: Container(
+		    color: Color(0xfff2f2f2),
+		    width: 300,
+		    child: TextFormField(
+		      controller: passwordController, 
+		      style: TextStyle(color: Colors.black),
+		      decoration: InputDecoration(
+			errorMaxLines: 3,
+			labelText: "Password",
+			labelStyle: TextStyle(
+			  color: labelcolor2,
+			),
+			contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
+			border: OutlineInputBorder(),
+			focusedBorder: OutlineInputBorder(
+			  borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
+			),
+		      ),
+		      cursorColor: Colors.blueGrey,
+		      validator: (value){ 
+			if(value.isEmpty){
+			  remove_errors_from_screen();
+			  return "Required";
+			}
+			else if(value.length<12){
+			  remove_errors_from_screen();
+			  return "A password of length more than or equal to 12 is required";
+			}
+			else if(!verifyPasswordRules(value)){
+			  remove_errors_from_screen();
+			  return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
+			}
+		      },
+		      obscureText: true 
+		    ),
+		  ),
+		),
+		SizedBox(height: 7),
 		successful ?
 		    CircularProgressIndicator(
 		      valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
@@ -176,6 +167,20 @@ class _signinformState extends State<signinform>{
 			  borderRadius: BorderRadius.circular(10.0),
 			),
 		      ),
+		    ),
+		    Row(
+		      children: [
+			SizedBox(width: 210),
+			GestureDetector(
+			  child: Text("Forgot your password?", style: TextStyle(fontSize: 12, color: Color(0xffBBB9B9),)),
+			  onTap: (){
+			    Navigator.push(
+			      context, 
+			      MaterialPageRoute(builder: (context) => ForgotPassword()),
+			    );
+			  },
+			),
+		      ],
 		    ),
 		    SizedBox(height:20),
 		    emailnotfound ?

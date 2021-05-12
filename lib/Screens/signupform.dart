@@ -31,7 +31,16 @@ class _signupformState extends State<signupform>{
   change_disable_or_enable(){
     if(emailController.text != "" && passwordController.text != ""){
       setState((){
-	onpressed = (){};
+	onpressed = (){
+	  if(formkey.currentState.validate()){
+	    setState((){
+	      successful = true;
+	      validated = false;
+	      email_exists = false;
+	    });
+	    registerNewUser(emailController.text, passwordController.text);
+   	  }
+	};
       });
     }
     else{
@@ -43,9 +52,8 @@ class _signupformState extends State<signupform>{
 
   @override
   Widget build(BuildContext context){
-    return KeyboardVisibilityBuilder( 
-      builder: (context, isKeyboardVisible){
-	return Form(
+    return SingleChildScrollView(
+	child: Form(
 	  key: formkey, 
 	  child: Container(
 	    alignment: Alignment.center, 
@@ -53,7 +61,7 @@ class _signupformState extends State<signupform>{
 	    child: Column(
 	      mainAxisAlignment: MainAxisAlignment.start, 
 	      children: <Widget>[
-		SizedBox(height: 37),
+		SizedBox(height: 33),
 		Focus(
 		  onFocusChange: (hasFocus){
 		    setState((){
@@ -62,11 +70,12 @@ class _signupformState extends State<signupform>{
 		  },
 		  child: Container(
 		    width: 300,
-		    color: Color(0xfff2f2f2), //Color inside the text box.
 		    child: TextFormField(
 		      controller: emailController,
 		      style: TextStyle(color: Colors.black,),
 		      decoration: InputDecoration(
+			filled: true,
+			fillColor: Color(0xfff2f2f2),
 			labelText: "Email",
 			labelStyle: TextStyle(
 			  color: labelcolor1,
@@ -102,11 +111,12 @@ class _signupformState extends State<signupform>{
 		  },
 		  child: Container(
 		    width: 300,
-		    color: Color(0xfff2f2f2), 
 		    child: TextFormField(
 		      controller: passwordController, 
 		      style: TextStyle(color: Colors.black),
 		      decoration: InputDecoration(
+			filled: true,
+			fillColor: Color(0xfff2f2f2),
 			errorMaxLines: 3,
 			labelText: "Password",
 			labelStyle: TextStyle(
@@ -144,6 +154,7 @@ class _signupformState extends State<signupform>{
 		    ) :
 		    Container(
 		      height: 42, 
+		      width: 300,
 		      child: ElevatedButton(
 			onPressed: onpressed,
 			child: Text("SIGN UP",),
@@ -168,9 +179,8 @@ class _signupformState extends State<signupform>{
 	      ]
 	    )
 	  )
-	);
-      }
-    );
+	),
+      );
   }
 
   bool verifyPasswordRules(String value){ 
