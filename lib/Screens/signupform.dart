@@ -20,6 +20,7 @@ class _signupformState extends State<signupform>{
   Color labelcolor1 = Color(0xff000000);
   Color labelcolor2 = Color(0xff000000);
   var onpressed = null;
+  AutovalidateMode _autovalidatemode = AutovalidateMode.disabled;
 
   @override
   void initState(){
@@ -37,9 +38,15 @@ class _signupformState extends State<signupform>{
 	      successful = true;
 	      validated = false;
 	      email_exists = false;
+	      _autovalidatemode = AutovalidateMode.disabled;
 	    });
 	    registerNewUser(emailController.text, passwordController.text);
    	  }
+	  else{
+	    setState((){
+	      _autovalidatemode = AutovalidateMode.onUserInteraction;
+	    });
+	  }
 	};
       });
     }
@@ -53,134 +60,135 @@ class _signupformState extends State<signupform>{
   @override
   Widget build(BuildContext context){
     return SingleChildScrollView(
-	child: Form(
-	  key: formkey, 
-	  child: Container(
-	    alignment: Alignment.center, 
-	    color: Color(0xffffffff),
-	    child: Column(
-	      mainAxisAlignment: MainAxisAlignment.start, 
-	      children: <Widget>[
-		SizedBox(height: 33),
-		Focus(
-		  onFocusChange: (hasFocus){
-		    setState((){
-		      labelcolor1 = hasFocus ? Color(0xff07B0B5) : Color(0xff000000);
-		    });
-		  },
-		  child: Container(
-		    width: 300,
-		    child: TextFormField(
-		      controller: emailController,
-		      style: TextStyle(color: Colors.black,),
-		      decoration: InputDecoration(
-			filled: true,
-			fillColor: Color(0xfff2f2f2),
-			labelText: "Email",
-			labelStyle: TextStyle(
-			  color: labelcolor1,
-			),
-			contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
-			border: OutlineInputBorder(),
-			focusedBorder: OutlineInputBorder(
-			  borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
-			),
+      child: Form(
+	key: formkey, 
+	autovalidateMode: _autovalidatemode,
+	child: Container(
+	  alignment: Alignment.center, 
+	  color: Color(0xffffffff),
+	  child: Column(
+	    mainAxisAlignment: MainAxisAlignment.start, 
+	    children: <Widget>[
+	      SizedBox(height: 33),
+	      Focus(
+		onFocusChange: (hasFocus){
+		  setState((){
+		    labelcolor1 = hasFocus ? Color(0xff07B0B5) : Color(0xff000000);
+		  });
+		},
+		child: Container(
+		  width: 300,
+		  child: TextFormField(
+		    controller: emailController,
+		    style: TextStyle(color: Colors.black,),
+		    decoration: InputDecoration(
+		      filled: true,
+		      fillColor: Color(0xfff2f2f2),
+		      labelText: "Email",
+		      labelStyle: TextStyle(
+			color: labelcolor1,
 		      ),
-		      cursorColor: Colors.blueGrey,
-		      validator: (value){ 
-			if(value.isEmpty){ 
-			  remove_errors_from_screen();
-			  return "Required";
-			}
-			else{
-			  if(!EmailValidator.validate(value)){
-			    remove_errors_from_screen();
-			    return "Not a valid email";
-			  }
-			}
-		      },
+		      contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
+		      border: OutlineInputBorder(),
+		      focusedBorder: OutlineInputBorder(
+			borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
+		      ),
 		    ),
+		    cursorColor: Colors.blueGrey,
+		    validator: (value){ 
+		      if(value.isEmpty){ 
+			remove_errors_from_screen();
+			return "Required";
+		      }
+		      else{
+			if(!EmailValidator.validate(value)){
+			  remove_errors_from_screen();
+			  return "Not a valid email";
+			}
+		      }
+		    },
 		  ),
 		),
-		SizedBox(height: 20),
-		Focus(
-		  onFocusChange: (hasFocus){
-		    setState((){
-		      labelcolor2 = hasFocus ? Color(0xff07B0B5) : Color(0xff000000);
-		    });
-		  },
-		  child: Container(
-		    width: 300,
-		    child: TextFormField(
-		      controller: passwordController, 
-		      style: TextStyle(color: Colors.black),
-		      decoration: InputDecoration(
-			filled: true,
-			fillColor: Color(0xfff2f2f2),
-			errorMaxLines: 3,
-			labelText: "Password",
-			labelStyle: TextStyle(
-			  color: labelcolor2,
-			),
-			contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
-			border: OutlineInputBorder(),
-			focusedBorder: OutlineInputBorder(
-			  borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
-			),
+	      ),
+	      SizedBox(height: 20),
+	      Focus(
+		onFocusChange: (hasFocus){
+		  setState((){
+		    labelcolor2 = hasFocus ? Color(0xff07B0B5) : Color(0xff000000);
+		  });
+		},
+		child: Container(
+		  width: 300,
+		  child: TextFormField(
+		    controller: passwordController, 
+		    style: TextStyle(color: Colors.black),
+		    decoration: InputDecoration(
+		      filled: true,
+		      fillColor: Color(0xfff2f2f2),
+		      errorMaxLines: 3,
+		      labelText: "Password",
+		      labelStyle: TextStyle(
+			color: labelcolor2,
 		      ),
-		      cursorColor: Colors.blueGrey,
-		      validator: (value){ 
-			if(value.isEmpty){
-			  remove_errors_from_screen();
-			  return "Required";
-			}
-			else if(value.length<12){
-			  remove_errors_from_screen();
-			  return "A password of length more than or equal to 12 is required";
-			}
-			else if(!verifyPasswordRules(value)){
-			  remove_errors_from_screen();
-			  return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
-			}
-		      },
-		      obscureText: true 
+		      contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
+		      border: OutlineInputBorder(),
+		      focusedBorder: OutlineInputBorder(
+			borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
+		      ),
 		    ),
+		    cursorColor: Colors.blueGrey,
+		    validator: (value){ 
+		      if(value.isEmpty){
+			remove_errors_from_screen();
+			return "Required";
+		      }
+		      else if(value.length<12){
+			remove_errors_from_screen();
+			return "A password of length more than or equal to 12 is required";
+		      }
+		      else if(!verifyPasswordRules(value)){
+			remove_errors_from_screen();
+			return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
+		      }
+		    },
+		    obscureText: true 
 		  ),
 		),
-		SizedBox(height: 20),
-		successful ?
-		    CircularProgressIndicator(
-		      valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
-		    ) :
-		    Container(
-		      height: 42, 
-		      width: 300,
-		      child: ElevatedButton(
-			onPressed: onpressed,
-			child: Text("SIGN UP",),
-			style: ButtonStyle(
-			  backgroundColor:MaterialStateProperty.resolveWith<Color>(
-			    (Set<MaterialState> states) {
-			      if (states.contains(MaterialState.pressed))
-				return Color(0xff07B0B5); //On pressed color
-			      else if (states.contains(MaterialState.disabled))
-				return Color.fromRGBO(7, 176, 181, 0.2); //Disabled color
-			      return Color(0xff07B0B5); //Enabled color
-			    },
-			  ), 
-			),
+	      ),
+	      SizedBox(height: 20),
+	      successful ?
+		  CircularProgressIndicator(
+		    valueColor: AlwaysStoppedAnimation<Color>(Color(0xff07B0B5)),
+		  ) :
+		  Container(
+		    height: 42, 
+		    width: 300,
+		    child: ElevatedButton(
+		      onPressed: onpressed,
+		      child: Text("SIGN UP",),
+		      style: ButtonStyle(
+			backgroundColor:MaterialStateProperty.resolveWith<Color>(
+			  (Set<MaterialState> states) {
+			    if (states.contains(MaterialState.pressed))
+			      return Color(0xff07B0B5); //On pressed color
+			    else if (states.contains(MaterialState.disabled))
+			      return Color.fromRGBO(7, 176, 181, 0.2); //Disabled color
+			    return Color(0xff07B0B5); //Enabled color
+			  },
+			), 
 		      ),
 		    ),
-		SizedBox(height:20),
-		validated ? Text("Successful! Please verify your email address, which is a one time process, by going to your email inbox.",
-		  style: TextStyle(fontSize:17, color: Colors.blue[100], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
-		email_exists ? Text("User with that e-mail already exists",
-		  style: TextStyle(fontSize:17, color: Colors.red[500], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
-	      ]
-	    )
+		  ),
+	      SizedBox(height:20),
+	      validated ? Text("Successful! Please verify your email address, which is a one time process, by going to your email inbox.",
+	                style: TextStyle(fontSize:17, color: Colors.blue[100], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
+	      email_exists ? Text("User with that e-mail already exists",
+		           style: TextStyle(fontSize:17, color: Colors.red[500], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
+            ]
 	  )
-	),
-      );
+	)
+      ),
+    );
   }
 
   bool verifyPasswordRules(String value){ 
@@ -190,11 +198,9 @@ class _signupformState extends State<signupform>{
   }
 
   remove_errors_from_screen(){
-    setState((){ 
-      validated = false;
-      email_exists = false;
-      successful = false;
-    });
+    validated = false;
+    email_exists = false;
+    successful = false;
   }
 
   FirebaseAuth auth = FirebaseAuth.instance; 
