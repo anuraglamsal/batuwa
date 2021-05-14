@@ -20,6 +20,7 @@ class _signinformState extends State<signinform>{
   Color labelcolor1 = Color(0xff000000);
   Color labelcolor2 = Color(0xff000000);
   var onpressed = null;
+  bool password_visibility = false;
 
   @override
   void initState(){
@@ -108,6 +109,21 @@ class _signinformState extends State<signinform>{
 		      controller: passwordController, 
 		      style: TextStyle(color: Colors.black),
 		      decoration: InputDecoration(
+			suffixIcon: IconButton(
+			  onPressed: (){
+			    if(!password_visibility){
+			      setState((){
+				password_visibility = true;
+			      });
+			    }
+			    else{
+			      setState((){
+				password_visibility = false;
+			      });
+			    }
+			  },
+			  icon: Icon(Icons.visibility, color: password_visibility ? Color(0xff07B0B5) : Colors.grey,),
+			),
 			errorMaxLines: 3,
 			labelText: "Password",
 			labelStyle: TextStyle(
@@ -134,65 +150,55 @@ class _signinformState extends State<signinform>{
 			  return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
 			}
 		      },
-		      obscureText: true 
+		      obscureText: !password_visibility, 
 		    ),
 		  ),
 		),
-		SizedBox(height: 7),
+		SizedBox(height: 20),
 		successful ?
 		    CircularProgressIndicator(
-		      valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
+		      valueColor: AlwaysStoppedAnimation<Color>(Color(0xff07B0B5)),
 		    ) :
 		    Container(
 		      height: 42, 
-		      child: RaisedButton(
-			color: Color(0xff2c334f),
-			onPressed: () {
-			  if(formkey.currentState.validate()){  
-			    setState((){ //Whenever you press sign-in and if the normal validation is successful, then a loading circle
-			                 //is shown on screen rather than the sign in button.
-			      successful = true;
-			      emailnotfound = false;
-			      wrongpassword = false;
-			      verifyyouremail = false;
-			    });
-			    signinUser(emailController.text, passwordController.text);
-			  }
-			},
-			child: Text(
-			  "Sign In",
-			  style: TextStyle(fontSize: 18.7, color: Colors.white, fontFamily: 'Mohave'),
-			),
-			shape: RoundedRectangleBorder(
-			  borderRadius: BorderRadius.circular(10.0),
+		      width: 300,
+		      child: ElevatedButton(
+			onPressed: onpressed,
+			child: Text("SIGN IN",),
+			style: ButtonStyle(
+			  backgroundColor:MaterialStateProperty.resolveWith<Color>(
+			    (Set<MaterialState> states) {
+			      if (states.contains(MaterialState.pressed))
+				return Color(0xff07B0B5); //On pressed color
+			      else if (states.contains(MaterialState.disabled))
+				return Color.fromRGBO(7, 176, 181, 0.2); //Disabled color
+			      return Color(0xff07B0B5); //Enabled color
+			    },
+			  ), 
 			),
 		      ),
 		    ),
-		    Row(
-		      children: [
-			SizedBox(width: 210),
-			GestureDetector(
-			  child: Text("Forgot your password?", style: TextStyle(fontSize: 12, color: Color(0xffBBB9B9),)),
-			  onTap: (){
-			    Navigator.push(
-			      context, 
-			      MaterialPageRoute(builder: (context) => ForgotPassword()),
-			    );
-			  },
-			),
-		      ],
+		SizedBox(height: 6),
+		Row(
+		  children: [
+		    SizedBox(width: 210),
+		    GestureDetector(
+		      child: Text("Forgot your password?", style: TextStyle(fontSize: 12, color: Color(0xffBBB9B9),)),
+		      onTap: (){
+			Navigator.push(
+			  context, 
+			  MaterialPageRoute(builder: (context) => ForgotPassword()),
+			);
+		      },
 		    ),
-		    SizedBox(height:20),
-		    emailnotfound ?
-			Text("The email entered doesn't exist in the database.",
-			  style: TextStyle(fontSize:17, color: Colors.red[400], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
-		    wrongpassword ?
-			Text("The password entered is wrong.",
-			  style: TextStyle(fontSize:17, color: Colors.red[400], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
-		    verifyyouremail ?
-			Text("Email verification not completed.",
-		         style: TextStyle(fontSize:17, color: Colors.red[400], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
-              ]
+		  ],
+		),
+		SizedBox(height: 10),
+		Row(
+		  children: [
+		  ],
+		),
+  	      ]
             )
           )
         );

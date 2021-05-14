@@ -11,8 +11,6 @@ class signupform extends StatefulWidget{//Needs to be stateful to show errors.
 }
 
 class _signupformState extends State<signupform>{
-  bool validated = false;
-  bool email_exists = false;
   bool successful = false;
   TextEditingController emailController = TextEditingController(); 
   TextEditingController passwordController = TextEditingController(); 
@@ -21,6 +19,7 @@ class _signupformState extends State<signupform>{
   Color labelcolor2 = Color(0xff000000);
   var onpressed = null;
   AutovalidateMode _autovalidatemode = AutovalidateMode.disabled;
+  bool password_visibility = false;
 
   @override
   void initState(){
@@ -36,11 +35,9 @@ class _signupformState extends State<signupform>{
 	  if(formkey.currentState.validate()){
 	    setState((){
 	      successful = true;
-	      validated = false;
-	      email_exists = false;
 	      _autovalidatemode = AutovalidateMode.disabled;
 	    });
-	    registerNewUser(emailController.text, passwordController.text);
+	    registerNewUser(emailController.text, passwordController.text, context);
    	  }
 	  else{
 	    setState((){
@@ -97,12 +94,10 @@ class _signupformState extends State<signupform>{
 		    cursorColor: Colors.blueGrey,
 		    validator: (value){ 
 		      if(value.isEmpty){ 
-			remove_errors_from_screen();
 			return "Required";
 		      }
 		      else{
 			if(!EmailValidator.validate(value)){
-			  remove_errors_from_screen();
 			  return "Not a valid email";
 			}
 		      }
@@ -123,6 +118,21 @@ class _signupformState extends State<signupform>{
 		    controller: passwordController, 
 		    style: TextStyle(color: Colors.black),
 		    decoration: InputDecoration(
+		      suffixIcon: IconButton(
+			onPressed: (){
+			  if(!password_visibility){
+			    setState((){
+			      password_visibility = true;
+			    });
+			  }
+			  else{
+			    setState((){
+			      password_visibility = false;
+			    });
+			  }
+		        },
+			icon: Icon(Icons.visibility, color: password_visibility ? Color(0xff07B0B5) : Colors.grey,),
+		      ),
 		      filled: true,
 		      fillColor: Color(0xfff2f2f2),
 		      errorMaxLines: 3,
@@ -139,19 +149,16 @@ class _signupformState extends State<signupform>{
 		    cursorColor: Colors.blueGrey,
 		    validator: (value){ 
 		      if(value.isEmpty){
-			remove_errors_from_screen();
 			return "Required";
 		      }
 		      else if(value.length<12){
-			remove_errors_from_screen();
 			return "A password of length more than or equal to 12 is required";
 		      }
 		      else if(!verifyPasswordRules(value)){
-			remove_errors_from_screen();
 			return "Password should be a combination of at least one of each of uppercase and lowercase letters, digits and special characters (! @ # \$ & * ~ ).";
 		      }
 		    },
-		    obscureText: true 
+		    obscureText: !password_visibility, 
 		  ),
 		),
 	      ),
@@ -179,17 +186,12 @@ class _signupformState extends State<signupform>{
 		      ),
 		    ),
 		  ),
-	      SizedBox(height:20),
-	      validated ? Text("Successful! Please verify your email address, which is a one time process, by going to your email inbox.",
-	                style: TextStyle(fontSize:17, color: Colors.blue[100], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
-	      email_exists ? Text("User with that e-mail already exists",
-		           style: TextStyle(fontSize:17, color: Colors.red[500], fontFamily: 'Mohave',), textAlign: TextAlign.center,):SizedBox(),
-            ]
-	  )
-	)
-      ),
-    );
-  }
+		]
+	      )
+	    )
+	  ),
+	);
+      }
 
   bool verifyPasswordRules(String value){ 
     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
@@ -197,15 +199,9 @@ class _signupformState extends State<signupform>{
     return regExp.hasMatch(value);
   }
 
-  remove_errors_from_screen(){
-    validated = false;
-    email_exists = false;
-    successful = false;
-  }
-
   FirebaseAuth auth = FirebaseAuth.instance; 
 
-  registerNewUser(email, password) async{
+  registerNewUser(email, password, context) async{
     bool flag = true;
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword( //Read the flutter firebase auth docs to understand this
@@ -214,24 +210,48 @@ class _signupformState extends State<signupform>{
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-	flag = false;
 	setState((){
-	  validated = false;
 	  successful = false;
-	  email_exists = true;
-	});
+        });
+	flag = false;
+	return showDialog(
+	  context: context,
+	  builder: (_) => AlertDialog(
+	    content: Text("User with that e-mail already exists.",),
+	    actions: [
+	      MaterialButton(
+		child: Text("OK", style: TextStyle(color: Color(0xff07B0B5),),),
+		onPressed: (){
+		  Navigator.pop(context);
+		},
+	      ),
+	    ],
+	  ),
+	);
       }
     }
     if(flag == true){
+      setState((){
+	successful = false;
+      });
       auth.currentUser.sendEmailVerification();
       firsttimelogin(1);
       await auth.signOut(); //Need to do this because users persist in sign up too. Thus, if the app is restarted, the user's account is opened,
       //and not the home screen.
-      setState((){
-	email_exists = false;
-	validated = true;
-	successful = false;
-      });
+      return showDialog(
+	context: context,
+	builder: (_) => AlertDialog(
+	  content: Text("Successful! Please verify your email address, which is a one time process, by going to your email inbox.",),
+	  actions: [
+	    MaterialButton(
+	      child: Text("OK", style: TextStyle(color: Color(0xff07B0B5),),),
+	      onPressed: (){
+		Navigator.pop(context);
+	      },
+	    ),
+	  ],
+	),
+      );
     }
   }
 
