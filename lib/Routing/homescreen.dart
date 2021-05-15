@@ -18,8 +18,8 @@ class _homeState extends State<home>{
 	    indicatorColor: Color(0xff07B0B5),
 	    indicatorWeight: 3,
 	    tabs: [
-	      Tab(child: Text("SIGN UP", style: TextStyle(color: Colors.black,),),),
 	      Tab(child: Text("SIGN IN", style: TextStyle(color: Colors.black,),),),
+	      Tab(child: Text("SIGN UP", style: TextStyle(color: Colors.black,),),),
 	    ],
 	  ),
 	  title: Container(
@@ -36,8 +36,8 @@ class _homeState extends State<home>{
 	),
 	body: TabBarView(
 	  children: [
-	    signupform(),
 	    signinform(),
+	    signupform(),
 	  ],
 	),
       ),

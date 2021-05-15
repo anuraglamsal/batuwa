@@ -48,6 +48,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   lottie: ^0.1.4
+  flutter_signin_button: ^2.0.0
+  flutter_svg: ^0.22.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +75,9 @@ flutter:
     - assets/images/logo2.png 
     - assets/images/ProfilePic.png
     - assets/animations/test.json
+    - assets/images/google-icon.svg 
+    - assets/images/facebook-icon.svg
+    - assets/images/twitter-icon.svg 
   fonts:
     - family: Mohave
       fonts:

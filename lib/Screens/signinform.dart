@@ -3,6 +3,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'forgotpassword.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class signinform extends StatefulWidget{ //Needs to be stateful because we show messages based on errors of sign in.
   @override
@@ -55,7 +56,7 @@ class _signinformState extends State<signinform>{
 	    child: Column(
 	      mainAxisAlignment: MainAxisAlignment.start, 
 	      children: [
-		SizedBox(height: 37),
+		SizedBox(height: 33),
 		Focus(
 		  onFocusChange: (hasFocus){
 		    setState((){
@@ -193,12 +194,50 @@ class _signinformState extends State<signinform>{
 		    ),
 		  ],
 		),
-		SizedBox(height: 10),
+		SizedBox(height: 21),
 		Row(
 		  children: [
+		    Expanded(
+		      child: Container(
+			margin: EdgeInsets.only(left: 110, right: 5),
+			child: Divider(
+			  color: Color(0xff50C7CB),
+			  thickness: 2,
+			),
+		      ),
+		    ),
+		    Container(
+		      width: 32,
+		      height: 32,
+		      child: Center(child: Text("OR", style: TextStyle(color: Color(0xff6E6C6C),),),),
+		      decoration: BoxDecoration(
+			shape: BoxShape.circle,
+			border: Border.all(color: Color(0xff50C7CB), width: 2,),
+		      ),
+		    ),
+		    Expanded(
+		      child: Container(
+			margin: EdgeInsets.only(left: 5, right: 110),
+			child: Divider(
+			  color: Color(0xff50C7CB),
+			  thickness: 2,
+			),
+		      ),
+		    ),
 		  ],
 		),
-  	      ]
+		SizedBox(height: 15),
+		Row(
+		  children: [
+		    SizedBox(width: 125),
+		    SvgPicture.asset('assets/images/google-icon.svg', width: 25, height: 25,),
+		    SizedBox(width: 17),
+		    SvgPicture.asset('assets/images/facebook-icon.svg', width: 28, height: 28,),
+		    SizedBox(width: 17),
+		    SvgPicture.asset('assets/images/twitter-icon.svg', width: 25, height: 25,),
+		  ],
+		),
+	      ]
             )
           )
         );
