@@ -3,9 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Routing/homescreen.dart';
 import 'Routing/userscreen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 Future<void> main() async{ //You need to initialize the "main" function in this particular manner for Firebase to be initialized.
   WidgetsFlutterBinding.ensureInitialized();//Required to initialize Firebase.
+  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/images/google-icon.svg'), null); //Caches this svg image such that 
+   														//it loads faster throughout the app.
+  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/images/facebook-icon.svg'), null);
+  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/images/twitter-icon.svg'), null);
   await Firebase.initializeApp();//Same as above.
   runApp(MyApp());
 }

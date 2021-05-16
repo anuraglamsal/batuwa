@@ -37,7 +37,7 @@ class _signupformState extends State<signupform>{
 	      successful = true;
 	      _autovalidatemode = AutovalidateMode.disabled;
 	    });
-	    registerNewUser(emailController.text, passwordController.text, context);
+	    registerNewUser(emailController.text, passwordController.text);
    	  }
 	  else{
 	    setState((){
@@ -201,7 +201,7 @@ class _signupformState extends State<signupform>{
 
   FirebaseAuth auth = FirebaseAuth.instance; 
 
-  registerNewUser(email, password, context) async{
+  registerNewUser(email, password) async{
     bool flag = true;
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword( //Read the flutter firebase auth docs to understand this
