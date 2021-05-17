@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'Routing/homescreen.dart';
 import 'Routing/userscreen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import './Cloud/cloud.dart';
 
 Future<void> main() async{ //You need to initialize the "main" function in this particular manner for Firebase to be initialized.
   WidgetsFlutterBinding.ensureInitialized();//Required to initialize Firebase.
@@ -25,6 +27,13 @@ class MyApp extends StatelessWidget{
 	  return Text("YEP");//replace Text("YEP"); with LinearProgressIndicator(); 
         }
 	else{
+	  //FirebaseAuth.instance.signOut();
+	  //GoogleSignIn().signOut();
+	  if(snapshot.data != null){
+	    if(snapshot.data.metadata.creationTime == snapshot.data.metadata.lastSignInTime){
+	      firsttimelogin(0);
+	    }
+	  }
 	  return MaterialApp(
 	    title: 'app',
 	    home: (snapshot.data != null && snapshot.data.emailVerified) ? userscreen() : home(), //If the data provided by the stream is null,

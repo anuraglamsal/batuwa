@@ -257,15 +257,15 @@ class _signinformState extends State<signinform>{
 	);
       }
 
-      google_sign_in() async{
-	final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-	final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-	final credential = GoogleAuthProvider.credential(
-	  accessToken: googleAuth.accessToken,
-	  idToken: googleAuth.idToken,
-	);
-	return await FirebaseAuth.instance.signInWithCredential(credential);
-      }
+  google_sign_in() async{
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
   //All of the functions being used in the widget.
 

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'map.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'search_screen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 //The screen that the user is directed to when their token is '0', i.e. this is their feed screen.
 class normalscreen extends StatefulWidget{
@@ -108,6 +109,7 @@ class _normalscreenState extends State<normalscreen>{
 
   logout() async{ //Signs the user out.
     await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
   }
 
 }
