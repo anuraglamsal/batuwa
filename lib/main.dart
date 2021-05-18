@@ -30,8 +30,12 @@ class MyApp extends StatelessWidget{
 	  //FirebaseAuth.instance.signOut();
 	  //GoogleSignIn().signOut();
 	  if(snapshot.data != null){
-	    if(snapshot.data.metadata.creationTime == snapshot.data.metadata.lastSignInTime){
-	      firsttimelogin(0);
+	    print(snapshot.data);
+	    String creationTime = snapshot.data.metadata.creationTime.toString().substring(0,19);
+	    print(creationTime);
+	    String lastSignInTime = snapshot.data.metadata.lastSignInTime.toString().substring(0,19);
+	    if(creationTime == lastSignInTime){
+	      firsttimelogin(1);
 	    }
 	  }
 	  return MaterialApp(
