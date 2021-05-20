@@ -264,8 +264,7 @@ class _signinformState extends State<signinform>{
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    var test = await FirebaseAuth.instance.signInWithCredential(credential);
-    print(test.user.uid);
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   //All of the functions being used in the widget.

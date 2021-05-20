@@ -25,22 +25,21 @@ class MyApp extends StatelessWidget{
       stream: login_stream(), //This stream gives information about whether a user is logged in or not. 
       builder: (context, snapshot){
 	if(snapshot.connectionState == ConnectionState.waiting){
-	  print(1);
-	  return Text("YEP");//replace Text("YEP"); with LinearProgressIndicator(); 
+	  return SizedBox();//replace Text("YEP"); with LinearProgressIndicator(); 
         }
 	else{
 	  //FirebaseAuth.instance.signOut();
 	  //GoogleSignIn().signOut();
-	  print(snapshot.data);
-	  if(snapshot.data != null){
-	    print(snapshot.data);
+	  //print(snapshot.data);
+	  /*if(snapshot.data != null){
+	    //print(snapshot.data);
 	    String creationTime = snapshot.data.metadata.creationTime.toString().substring(0,19);
 	    print(creationTime);
 	    String lastSignInTime = snapshot.data.metadata.lastSignInTime.toString().substring(0,19);
 	    if(creationTime == lastSignInTime){
 	      firsttimelogin(1);
 	    }
-	  }
+	  }*/
 	  return MaterialApp(
 	    title: 'app',
 	    home: (snapshot.data != null && snapshot.data.emailVerified) ? userscreen() : home(), //If the data provided by the stream is null,
