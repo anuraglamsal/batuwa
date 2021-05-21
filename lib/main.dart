@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget{
 	  }*/
 	  return MaterialApp(
 	    title: 'app',
-	    home: (snapshot.data != null && snapshot.data.emailVerified) ? userscreen() : home(), //If the data provided by the stream is null,
+	    home: (snapshot.data) ? userscreen() : home(), //If the data provided by the stream is null,
 	      						//then that means a user isn't logged in, therefore, we should send the user to the 
 	   						//'home' screen. Even when it's not null, if the user's email hasn't been verified,
 	                                                //then we again send them to the 'home' screen. If both are false, then that means

@@ -31,7 +31,6 @@ class userscreen extends StatelessWidget{
 	  );
 	}
 	else if(snapshot.data['token'] == 0){ //When the token is '0' the user is sent to the 'normalscreen' page.
-	  print(AdditionalUserInfo().providerId);
 	  return normalscreen();     
 	}
 	else{
