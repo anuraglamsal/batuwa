@@ -238,11 +238,15 @@ class _signinformState extends State<signinform>{
 		  Row(
 		    children: [
 		      SizedBox(width: 125),
-		      GestureDetector(
-			onTap: (){
-			  google_sign_in();
-		        },
-			child: SvgPicture.asset('assets/images/google-icon.svg', width: 25, height: 25,),
+		      Material(
+			color: Colors.transparent,
+			child: InkWell(
+			  customBorder: CircleBorder(),
+			  onTap: (){
+			    google_sign_in();
+			  },
+			  child: SvgPicture.asset('assets/images/google-icon.svg', width: 25, height: 25,),
+			),
 		      ),
 		      SizedBox(width: 17),
 		      SvgPicture.asset('assets/images/facebook-icon.svg', width: 28, height: 28,),
@@ -258,13 +262,13 @@ class _signinformState extends State<signinform>{
       }
 
   google_sign_in() async{
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn(); //Opens the dialog box to choose which account to sign in with.
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication; //The credentials of the account you chose. 
+    final credential = GoogleAuthProvider.credential( //Creates a new credential to sign in here. Idk why.
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential); //Sign in.
   }
 
   //All of the functions being used in the widget.

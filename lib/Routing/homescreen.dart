@@ -13,6 +13,7 @@ class _homeState extends State<home>{
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+	backgroundColor: Colors.white,
 	appBar: AppBar(
 	  bottom: TabBar(
 	    indicatorColor: Color(0xff07B0B5),
