@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'forgotpassword.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class signinform extends StatefulWidget{ //Needs to be stateful because we show messages based on errors of sign in.
   @override
@@ -238,20 +239,55 @@ class _signinformState extends State<signinform>{
 		  Row(
 		    children: [
 		      SizedBox(width: 125),
-		      Material(
-			color: Colors.transparent,
-			child: InkWell(
-			  customBorder: CircleBorder(),
-			  onTap: (){
-			    google_sign_in();
-			  },
-			  child: SvgPicture.asset('assets/images/google-icon.svg', width: 25, height: 25,),
-			),
+		      Stack(
+			children:[
+			  SvgPicture.asset('assets/images/google-icon.svg', width: 25, height: 25,),
+			  Positioned.fill(
+			    child: Material(
+			      color: Colors.transparent,
+			      child: InkWell(
+				customBorder: CircleBorder(),
+				onTap:(){
+				  google_sign_in();
+			        },
+			      ),
+			    ),
+			  ),
+			],
 		      ),
 		      SizedBox(width: 17),
-		      SvgPicture.asset('assets/images/facebook-icon.svg', width: 28, height: 28,),
+		      Stack(
+			children:[
+			  SvgPicture.asset('assets/images/facebook-icon.svg', width: 28, height: 28,),
+			  Positioned.fill(
+			    child: Material(
+			      color: Colors.transparent,
+			      child: InkWell(
+				customBorder: CircleBorder(),
+				onTap:(){
+				  facebook_sign_in();
+				},
+			      ),
+			    ),
+			  ),
+			],
+		      ),
 		      SizedBox(width: 17),
-		      SvgPicture.asset('assets/images/twitter-icon.svg', width: 25, height: 25,),
+		      Stack(
+			children:[
+			  SvgPicture.asset('assets/images/twitter-icon.svg', width: 25, height: 25,),
+			  Positioned.fill(
+			    child: Material(
+			      color: Colors.transparent,
+			      child: InkWell(
+				customBorder: CircleBorder(),
+				onTap:(){
+				},
+			      ),
+			    ),
+			  ),
+			],
+		      ),
 		    ],
 		  ),
 		]
@@ -261,6 +297,8 @@ class _signinformState extends State<signinform>{
 	);
       }
 
+  //All of the functions being used in the widget.
+
   google_sign_in() async{
     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn(); //Opens the dialog box to choose which account to sign in with.
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication; //The credentials of the account you chose. 
@@ -268,10 +306,18 @@ class _signinformState extends State<signinform>{
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential); //Sign in.
+    return await FirebaseAuth.instance.signInWithCredential(credential); //Sign in. If the user escapes the dialog box without choosing any account,
+                                                                         //then null is returned.
   }
 
-  //All of the functions being used in the widget.
+  Future<UserCredential> facebook_sign_in() async {
+    final LoginResult result = await FacebookAuth.instance.login(); //Opens the dialog box.
+    if(result.status == LoginStatus.success){
+      final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken.token); //Creates a new credential
+      return await FirebaseAuth.instance.signInWithCredential(credential); //Sign in
+    }
+    return null; //If the user escaped the dialog box, return null.
+  }
 
   bool verifyPasswordRules(String value){ //This allows us to have the password condition as described above.
     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
