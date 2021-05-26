@@ -6,6 +6,7 @@ import 'forgotpassword.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 
 class signinform extends StatefulWidget{ //Needs to be stateful because we show messages based on errors of sign in.
   @override
@@ -263,6 +264,7 @@ class _signinformState extends State<signinform>{
 			    child: Material(
 			      color: Colors.transparent,
 			      child: InkWell(
+				splashColor: Color.fromRGBO(238, 238, 238, 0.35),
 				customBorder: CircleBorder(),
 				onTap:(){
 				  facebook_sign_in();
@@ -282,6 +284,7 @@ class _signinformState extends State<signinform>{
 			      child: InkWell(
 				customBorder: CircleBorder(),
 				onTap:(){
+				  twitter_sign_in();
 				},
 			      ),
 			    ),
@@ -317,6 +320,25 @@ class _signinformState extends State<signinform>{
       return await FirebaseAuth.instance.signInWithCredential(credential); //Sign in
     }
     return null; //If the user escaped the dialog box, return null.
+  }
+
+  Future<UserCredential> twitter_sign_in() async {
+    // Create a TwitterLogin instance
+    final TwitterLogin twitterLogin = new TwitterLogin(
+      consumerKey: 'V4fcIrGdXq3gSt4Sc5Ak9yFkp',
+      consumerSecret: 'QRQUNbAyMmPnI6rvClQqohXDRklP5FRIbR98naM7qYS2zXZsfy',
+    );
+    // Trigger the sign-in flow
+    final TwitterLoginResult loginResult = await twitterLogin.authorize();
+    // Get the Logged In session
+    final TwitterSession twitterSession = loginResult.session;
+    // Create a credential from the access token
+    final twitterAuthCredential = TwitterAuthProvider.credential(
+      accessToken: twitterSession.token,
+      secret: twitterSession.secret,
+    );
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
   }
 
   bool verifyPasswordRules(String value){ //This allows us to have the password condition as described above.
