@@ -11,122 +11,149 @@ class _ForgotPasswordState extends State<ForgotPassword>{
   bool success = false;
   bool failure = false;
   bool circle = false;
+  Color labelcolor = Color(0xff000000);
+  var onpressed = null;
+  AutovalidateMode _autovalidatemode = AutovalidateMode.disabled;
   TextEditingController emailController = TextEditingController();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+
+  @override
+  void initState(){
+    super.initState();
+    emailController.addListener(change_disable_or_enable);
+  }
+
+  change_disable_or_enable(){
+    if(emailController.text != ""){
+      setState((){
+	onpressed = (){
+	  if(formkey.currentState.validate()){
+	    setState((){
+	      circle = true;
+	      _autovalidatemode = AutovalidateMode.disabled;
+	    });
+	    resetPassword(emailController.text);
+	  }
+	  else{
+	    setState((){
+	      _autovalidatemode = AutovalidateMode.onUserInteraction;
+	    });
+	  }
+	};
+      });
+    }
+    else{
+      setState((){
+	onpressed = null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-	title: Container(
-	  alignment: Alignment(-0.2, 0),
-	  child: Text(
-	    "batuwa",
-	    style: TextStyle(
-	      fontFamily: 'Mohave',
-	    ),
-	  ),
+	elevation: 0,
+	leading: BackButton(
+	  color: Colors.black,
 	),
-	backgroundColor: Color(0xff252a42),
+	title: Container(
+	  alignment: Alignment(-0.26, 0),
+	  child: Text("batuwa", style: TextStyle(color: Colors.black, fontFamily: 'Mohave',),),
+	),
+	backgroundColor: Color(0xffffffff),
       ),
       body: Form(
 	key: formkey,
+	autovalidateMode: _autovalidatemode,
 	child: Container(
 	  alignment: Alignment.center,
-	  color: Color(0xff0e0f26),
+	  color: Color(0xffffffff),
 	  child: Column(
 	    mainAxisAlignment: MainAxisAlignment.start,
 	    children: [
-	      SizedBox(height: 20),
+	      SizedBox(height: 19),
 	      Container(
-		height: 90,
-		width: 390,
-		alignment: Alignment.center,
-		decoration: BoxDecoration(
-		  color: Color(0xff2c334f),
-		  borderRadius: BorderRadius.all(Radius.circular(15)),
-		),
+		width: 300,
 		child: Text(
-		  "Please write your e-mail address here and click send. We'll send you an email providing further instructions.", 
-		  textAlign: TextAlign.center,
-		  style: TextStyle(fontSize: 21, color: Colors.white, fontFamily: 'Mohave',),
-		),
-	      ),
-	      Container(
-         	width: 330,
-		child:TextFormField(
-		  controller: emailController, 
-		  style: TextStyle(color: Colors.white),
-		  decoration: InputDecoration(
-		    enabledBorder: UnderlineInputBorder(
-		      borderSide: BorderSide(color: Color(0xff434a66)),
-		    ),
-		    focusedBorder: UnderlineInputBorder(
-		      borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),	
-		    ),
+		  "Enter the email associated with your account and hit send. We'll send you password reset instructions in that email.",
+		  style: TextStyle(
+		    fontSize: 13,
+		    color: Color(0xffa8a8a8),
 		  ),
-		  cursorColor: Colors.blueGrey,
-		  validator: (value){  
-		    if(value.isEmpty){
-		      remove_all_errors();
-		      return "Required"; 
-		    }
-		    else{
-		      if(!EmailValidator.validate(value)){
-			remove_all_errors();
-			return "Not a valid email";
-		      }
-		    }
-		  },
 		),
 	      ),
 	      SizedBox(height: 15),
+	      Focus(
+		onFocusChange: (hasFocus){
+		  setState((){
+		    labelcolor = hasFocus ? Color(0xff07B0B5) : Color(0xff000000);
+		  });
+		},
+		child: Container(
+		  width: 300,
+		  child:TextFormField(
+		    controller: emailController, 
+		    style: TextStyle(color: Colors.black),
+		    decoration: InputDecoration(
+		      filled: true,
+		      fillColor: Color(0xfff2f2f2),
+		      labelText: "Email",
+		      labelStyle: TextStyle(
+			color: labelcolor,
+		      ),
+		      contentPadding: EdgeInsets.fromLTRB(13, 32, 32, 0),
+		      border: OutlineInputBorder(),
+		      focusedBorder: OutlineInputBorder(
+			borderSide: BorderSide(color: Color(0xff07B0B5), width: 2.0,),
+		      ),
+		    ),
+		    cursorColor: Colors.blueGrey,
+		    validator: (value){  
+		      if(value.isEmpty){
+			return "Required"; 
+		      }
+		      else{
+			if(!EmailValidator.validate(value)){
+			  return "Not a valid email";
+			}
+		      }
+		    },
+		  ),
+		),
+	      ),
+	      SizedBox(height: 20),
 	      circle ?
 		  CircularProgressIndicator(
-		    valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
+		    valueColor: AlwaysStoppedAnimation<Color>(Color(0xff07B0B5)),
 		  ) :
 		  Container(
 		    height: 42, 
-		    child: RaisedButton(
-		      color: Color(0xff2c334f),
-		      onPressed: () {
-			if(formkey.currentState.validate()){  
-			  setState((){
-			    circle = true;
-			    success = false;
-			    failure = false;
-			  });
-			  resetPassword(emailController.text);
-			}
-		      },
+		    width: 300,
+		    child: ElevatedButton(
+		      onPressed: onpressed,
 		      child: Text(
-			"Send",
-			style: TextStyle(fontSize: 18.7, color: Colors.white, fontFamily: 'Mohave'),
+			"SEND",
 		      ),
-		      shape: RoundedRectangleBorder(
-			borderRadius: BorderRadius.circular(10.0),
+		      style: ButtonStyle(
+			backgroundColor: MaterialStateProperty.resolveWith<Color>(
+			  (Set<MaterialState> states) {
+			    if (states.contains(MaterialState.pressed))
+			      return Color(0xff07B0B5); //On pressed color
+			    else if (states.contains(MaterialState.disabled))
+			      return Color.fromRGBO(7, 176, 181, 0.2); //Disabled color
+			    return Color(0xff07B0B5); //Enabled color
+			  },
+			), 
 		      ),
 		    ),
 		  ),
               SizedBox(height: 15),
-	      success ?
-		  Text("Please check your inbox.", style: TextStyle(fontSize: 17, color: Colors.blue[100], fontFamily: 'Mohave',),) : SizedBox(),
-	      failure ? 
-		  Text("This e-mail doesn't exist in the database.", style: TextStyle(fontSize: 17, color: Colors.red[400], fontFamily: 'Mohave',), 
-		    textAlign: TextAlign.center,)
-		  : SizedBox(),
 	    ],
 	  ),
 	),
       ),
     );
-  }
-
-  remove_all_errors(){
-    setState((){
-      success = false;
-      failure = false;
-      circle= false;
-    });
   }
 
   FirebaseAuth auth = FirebaseAuth.instance; //This instance is required to use FirebaseAuth services. 
@@ -141,19 +168,34 @@ class _ForgotPasswordState extends State<ForgotPassword>{
       flag = false;
       if (e.code == 'user-not-found'){ //When the user is not found, the respective error message is shown on screen.
 	setState((){
-	  success = false;
-	  failure = true;
 	  circle = false;
 	});
+	dialogbox("This email doesn't exist in the database.");
       }
     }
     if(flag){ //When the flag is true, then that means the email was successfully sent, thus, that particular message is shown on the app's screen.
       setState((){
-	success = true;
-	failure = false;
 	circle = false;
       });
+      dialogbox("Please check your inbox.");
     }
+  }
+
+  dialogbox(String message){
+    return showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+	content: Text(message,),
+	actions: [
+	  MaterialButton(
+	    child: Text("OK", style: TextStyle(color: Color(0xff07B0B5),),),
+	    onPressed: (){
+	      Navigator.pop(context);
+	    },
+	  ),
+	],
+      ),
+    );
   }
 
 }

@@ -15,6 +15,7 @@ class _homeState extends State<home>{
       child: Scaffold(
 	backgroundColor: Colors.white,
 	appBar: AppBar(
+	  //elevation: 0,
 	  bottom: TabBar(
 	    indicatorColor: Color(0xff07B0B5),
 	    indicatorWeight: 3,

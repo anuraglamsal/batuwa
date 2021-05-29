@@ -15,6 +15,7 @@ class signinform extends StatefulWidget{ //Needs to be stateful because we show 
 
 class _signinformState extends State<signinform>{
   bool successful = false;
+  bool successful_2 = false;
   TextEditingController emailController = TextEditingController(); //These controllers are used to fetch form-entered data in real-time.
   TextEditingController passwordController = TextEditingController(); 
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -177,7 +178,7 @@ class _signinformState extends State<signinform>{
 		      onPressed: onpressed,
 		      child: Text("SIGN IN",),
 		      style: ButtonStyle(
-			backgroundColor:MaterialStateProperty.resolveWith<Color>(
+			backgroundColor: MaterialStateProperty.resolveWith<Color>(
 			  (Set<MaterialState> states) {
 			    if (states.contains(MaterialState.pressed))
 			      return Color(0xff07B0B5); //On pressed color
@@ -237,62 +238,66 @@ class _signinformState extends State<signinform>{
 		    ],
 		  ),
 		  SizedBox(height: 15),
-		  Row(
-		    children: [
-		      SizedBox(width: 125),
-		      Stack(
-			children:[
-			  SvgPicture.asset('assets/images/google-icon.svg', width: 25, height: 25,),
-			  Positioned.fill(
-			    child: Material(
-			      color: Colors.transparent,
-			      child: InkWell(
-				customBorder: CircleBorder(),
-				onTap:(){
-				  google_sign_in();
-			        },
-			      ),
+		  successful_2 ?
+		      CircularProgressIndicator(
+			valueColor: AlwaysStoppedAnimation<Color>(Color(0xff07B0B5)),
+		      ) :
+			Row(
+			  children: [
+			    SizedBox(width: 125),
+			    Stack(
+			      children:[
+				SvgPicture.asset('assets/images/google-icon.svg', width: 25, height: 25,),
+				Positioned.fill(
+				  child: Material(
+				    color: Colors.transparent,
+				    child: InkWell(
+				      customBorder: CircleBorder(),
+				      onTap:(){
+					google_sign_in();
+				      },
+				    ),
+				  ),
+				),
+			      ],
 			    ),
-			  ),
-			],
-		      ),
-		      SizedBox(width: 17),
-		      Stack(
-			children:[
-			  SvgPicture.asset('assets/images/facebook-icon.svg', width: 28, height: 28,),
-			  Positioned.fill(
-			    child: Material(
-			      color: Colors.transparent,
-			      child: InkWell(
-				splashColor: Color.fromRGBO(238, 238, 238, 0.35),
-				customBorder: CircleBorder(),
-				onTap:(){
-				  facebook_sign_in();
-				},
-			      ),
+			    SizedBox(width: 17),
+			    Stack(
+			      children:[
+				SvgPicture.asset('assets/images/facebook-icon.svg', width: 28, height: 28,),
+				Positioned.fill(
+				  child: Material(
+				    color: Colors.transparent,
+				    child: InkWell(
+				      splashColor: Color.fromRGBO(238, 238, 238, 0.35),
+				      customBorder: CircleBorder(),
+				      onTap:(){
+					facebook_sign_in();
+				      },
+				    ),
+				  ),
+				),
+			      ],
 			    ),
-			  ),
-			],
-		      ),
-		      SizedBox(width: 17),
-		      Stack(
-			children:[
-			  SvgPicture.asset('assets/images/twitter-icon.svg', width: 25, height: 25,),
-			  Positioned.fill(
-			    child: Material(
-			      color: Colors.transparent,
-			      child: InkWell(
-				customBorder: CircleBorder(),
-				onTap:(){
-				  twitter_sign_in();
-				},
-			      ),
+			    SizedBox(width: 17),
+			    Stack(
+			      children:[
+				SvgPicture.asset('assets/images/twitter-icon.svg', width: 25, height: 25,),
+				Positioned.fill(
+				  child: Material(
+				    color: Colors.transparent,
+				    child: InkWell(
+				      customBorder: CircleBorder(),
+				      onTap:(){
+					twitter_sign_in();
+				      },
+				    ),
+				  ),
+				),
+			      ],
 			    ),
-			  ),
-			],
-		      ),
-		    ],
-		  ),
+			  ],
+			),
 		]
 	      )
 	    )
@@ -304,13 +309,19 @@ class _signinformState extends State<signinform>{
 
   google_sign_in() async{
     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn(); //Opens the dialog box to choose which account to sign in with.
+    if(googleUser != null){
+      setState((){
+	successful_2 = true;
+      });
+    }
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication; //The credentials of the account you chose. 
     final credential = GoogleAuthProvider.credential( //Creates a new credential to sign in here. Idk why.
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    return await FirebaseAuth.instance.signInWithCredential(credential); //Sign in. If the user escapes the dialog box without choosing any account,
-                                                                         //then null is returned.
+    return await FirebaseAuth.instance.signInWithCredential(credential); //Sign in. If the user escapes the dialog box without 
+      									 //choosing any account, null is returned.
+
   }
 
   Future<UserCredential> facebook_sign_in() async {
