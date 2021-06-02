@@ -18,18 +18,8 @@ class userscreen extends StatelessWidget{
 	  return Container(color: Color(0xff0e0f26),);
 	}
 	else if(snapshot.data['token'] == 1){ //When the token is '1' the user is sent to the 'firsttimelogin' page.
-	  return Scaffold(
-	    appBar: AppBar(
-	      title: Center(child: Text("batuwa", style: TextStyle(fontFamily: 'Mohave',))),
-	      backgroundColor: Color(0xff252a42),
-	    ),
-	    body: Container(
-	      alignment: Alignment.center,
-	      color: Color(0xff0e0f26),
-	      child: firsttimeLogin(),
-	    ),
-	  );
-	}
+	  return firsttimeLogin();
+      }
 	else if(snapshot.data['token'] == 0){ //When the token is '0' the user is sent to the 'normalscreen' page.
 	  return normalscreen();     
 	}

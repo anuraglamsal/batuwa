@@ -82,6 +82,7 @@ flutter:
     - assets/images/google-icon.svg 
     - assets/images/facebook-icon.svg
     - assets/images/twitter-icon.svg 
+    - assets/images/welcome_banner.svg 
   fonts:
     - family: Mohave
       fonts:

@@ -324,16 +324,19 @@ class _signinformState extends State<signinform>{
 
   }
 
-  Future<UserCredential> facebook_sign_in() async {
+  facebook_sign_in() async {
     final LoginResult result = await FacebookAuth.instance.login(); //Opens the dialog box.
     if(result.status == LoginStatus.success){
+      setState((){
+	successful_2 = true;
+      });
       final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken.token); //Creates a new credential
       return await FirebaseAuth.instance.signInWithCredential(credential); //Sign in
     }
     return null; //If the user escaped the dialog box, return null.
   }
 
-  Future<UserCredential> twitter_sign_in() async {
+  twitter_sign_in() async {
     // Create a TwitterLogin instance
     final TwitterLogin twitterLogin = new TwitterLogin(
       consumerKey: 'V4fcIrGdXq3gSt4Sc5Ak9yFkp',
@@ -341,6 +344,11 @@ class _signinformState extends State<signinform>{
     );
     // Trigger the sign-in flow
     final TwitterLoginResult loginResult = await twitterLogin.authorize();
+    if(loginResult.session != null){
+      setState((){
+	successful_2 = true;
+      });
+    }
     // Get the Logged In session
     final TwitterSession twitterSession = loginResult.session;
     // Create a credential from the access token

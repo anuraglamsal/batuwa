@@ -14,6 +14,7 @@ Future<void> main() async{ //You need to initialize the "main" function in this 
    														//it loads faster throughout the app.
   await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/images/facebook-icon.svg'), null);
   await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/images/twitter-icon.svg'), null);
+  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/images/welcome_banner.svg'), null);
   await Firebase.initializeApp();//Same as above.
   runApp(MyApp());
 }
