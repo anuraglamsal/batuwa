@@ -26,8 +26,15 @@ class MyApp extends StatelessWidget{
       stream: login_stream(), //This stream gives information about whether a user is logged in or not. 
       builder: (context, snapshot){
 	if(snapshot.connectionState == ConnectionState.waiting){
-	  return SizedBox();//replace Text("YEP"); with LinearProgressIndicator(); 
-        }
+	  return Container(
+	    color: Colors.white,
+	    child: Center(
+	      child: CircularProgressIndicator(
+		valueColor: AlwaysStoppedAnimation<Color>(Color(0xff07B0B5)),
+	      ),
+	    ),
+	  );
+	}
 	else{
 	  //FirebaseAuth.instance.signOut();
 	  //GoogleSignIn().signOut();

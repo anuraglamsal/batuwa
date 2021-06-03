@@ -15,7 +15,14 @@ class userscreen extends StatelessWidget{
       stream: FirebaseFirestore.instance.collection('token').doc(FirebaseAuth.instance.currentUser.uid).snapshots(),
       builder: (context, snapshot){
 	if(snapshot.connectionState == ConnectionState.waiting){
-	  return Container(color: Color(0xff0e0f26),);
+	  return Container(
+	    color: Colors.white,
+	    child: Center(
+	      child: CircularProgressIndicator(
+		valueColor: AlwaysStoppedAnimation<Color>(Color(0xff07B0B5)),
+	      ),
+	    ),
+	  );
 	}
 	else if(snapshot.data['token'] == 1){ //When the token is '1' the user is sent to the 'firsttimelogin' page.
 	  return firsttimeLogin();

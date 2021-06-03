@@ -21,11 +21,13 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
 	    SvgPicture.asset('assets/images/welcome_banner.svg', height: 100),
 	    SizedBox(height: 45),
 	    Container(
-	      height: 42, 
-	      width: 200,
+	      height: 39, 
+	      width: 188,
 	      child: ElevatedButton(
-		onPressed: (){},
-		child: Text("SIGN IN",),
+		onPressed: (){
+		  update_token(0); //When they press this container, the token is updated to '0'. Token logic: shorturl.at/atDIP
+		},
+		child: Text("START EXPLORING THE APP", style: TextStyle(fontSize: 12,),),
 		style: ButtonStyle(
 		  backgroundColor: MaterialStateProperty.resolveWith<Color>(
 		    (Set<MaterialState> states) {
@@ -33,56 +35,68 @@ class _firsttimeLoginState extends State<firsttimeLogin>{
 			return Color(0xff07B0B5); //On pressed color
 		      else if (!states.contains(MaterialState.disabled))
 			return Color(0xff07B0B5); //Disabled color
-		      //return Color(0xff07B0B5); //Enabled color
-		    },
-		  ), 
+		      },
+		    ), 
+		  ),
 		),
 	      ),
-	    ),
-	    /*GestureDetector(
-	      child: Container(
-		height: 40,
-		width: 170,
-		alignment: Alignment.center,
-		decoration: BoxDecoration(
-		  color: Colors.blue[600],
-		  borderRadius: BorderRadius.all(Radius.circular(15)),
-		),
-		child: Text(
-		  "Start posting right away", style: TextStyle(color: Colors.white, fontFamily: 'Mohave', fontSize: 16,),
-		),
+	      SizedBox(height: 21),
+	      Row(
+		children: [
+		  Expanded(
+		    child: Container(
+		      margin: EdgeInsets.only(left: 110, right: 5),
+		      child: Divider(
+			color: Color(0xff50C7CB),
+			thickness: 2,
+		      ),
+		    ),
+		  ),
+		  Container(
+		    width: 32,
+		    height: 32,
+		    child: Center(child: Text("OR", style: TextStyle(color: Color(0xff6E6C6C),),),),
+		    decoration: BoxDecoration(
+		      shape: BoxShape.circle,
+		      border: Border.all(color: Color(0xff50C7CB), width: 2,),
+		    ),
+		  ),
+		  Expanded(
+		    child: Container(
+		      margin: EdgeInsets.only(left: 5, right: 110),
+		      child: Divider(
+			color: Color(0xff50C7CB),
+			thickness: 2,
+		      ),
+		    ),
+		  ),
+		],
 	      ),
-	      onTap: (){
-		update_token(0); //When they press this container, the token is updated to '0'. Token logic: shorturl.at/atDIP
-	      },
-	    ),*/
-	    SizedBox(height: 17),
-	    Text(
-	      "or", style: TextStyle(fontSize: 17, color: Colors.white),
-	    ),
-	    SizedBox(height: 17),
-	    GestureDetector(
-	      child: Container(
-		height: 50,
-		width: 250,
-		alignment: Alignment.center,
-		decoration: BoxDecoration(
-		  color: Colors.blue[600],
-		  borderRadius: BorderRadius.all(Radius.circular(15)),
+	      SizedBox(height: 21),
+	      Container(
+		height: 39, 
+		width: 188,
+		child: ElevatedButton(
+		  onPressed: (){
+		    update_token(-1); //When they press this container, the token is updated to '-1'. Token logic: shorturl.at/atDIP
+		  },
+		  child: Text("CUSTOMIZE YOUR PROFILE", style: TextStyle(fontSize: 12,),),
+		  style: ButtonStyle(
+		    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+		      (Set<MaterialState> states) {
+			if (states.contains(MaterialState.pressed))
+			  return Color(0xff07B0B5); //On pressed color
+			else if (!states.contains(MaterialState.disabled))
+			  return Color(0xff07B0B5); //Disabled color
+			},
+		      ), 
+		    ),
+		  ),
 		),
-		child: Text(
-		  "Customize your profile", style: TextStyle(color: Colors.white, fontFamily: 'Mohave', fontSize: 22,),
-		),
-	      ),
-	      onTap: (){
-		update_token(-1); //When they press this container, the token is updated to '-1'. Token logic: shorturl.at/atDIP
-	      },
+	      ],
 	    ),
-	  ],
-	),
-
-      ),
-    );
-  }
-}
+	  ),
+	);
+      }
+    }
 

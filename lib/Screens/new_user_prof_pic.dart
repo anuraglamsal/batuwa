@@ -71,7 +71,7 @@ class _profpicscreenState extends State<profpicscreen>{
 		    child: Text("Upload your profile pic", style: TextStyle(fontFamily: "Mohave", fontSize: 20,)),
 		  ),
 		),
-            SizedBox(height: 510),	
+            SizedBox(height: 300),	
 	    Row(
 	      children: [
 		SizedBox(width: 255),
