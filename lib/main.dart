@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget{
 	      firsttimelogin(1);
 	    }
 	  }*/
+	  //FirebaseAuth.instance.signOut();
 	  return MaterialApp(
 	    title: 'app',
 	    home: (snapshot.data) ? userscreen() : home(), //If the data provided by the stream is null,

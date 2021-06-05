@@ -26,17 +26,12 @@ class userscreen extends StatelessWidget{
 	}
 	else if(snapshot.data['token'] == 1){ //When the token is '1' the user is sent to the 'firsttimelogin' page.
 	  return firsttimeLogin();
-      }
+        }
 	else if(snapshot.data['token'] == 0){ //When the token is '0' the user is sent to the 'normalscreen' page.
 	  return normalscreen();     
 	}
 	else{
-	  if(snapshot.data['token'] == -1){ //When the token is '-1' the user is sent to the 'usernamescreen' page.
-	    return usernamescreen();
-	  }
-	  else{
-	    return profpicscreen(); //When the token is '-2' the user is sent to the 'profpicscren' page.
-	  }
+	  return usernamescreen();
 	}
       }
     );

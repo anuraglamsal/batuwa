@@ -148,13 +148,12 @@ class _ForgotPasswordState extends State<ForgotPassword>{
 		      ),
 		    ),
 		  ),
-              SizedBox(height: 15),
-	    ],
+		],
+	      ),
+	    ),
 	  ),
-	),
-      ),
-    );
-  }
+	);
+      }
 
   FirebaseAuth auth = FirebaseAuth.instance; //This instance is required to use FirebaseAuth services. 
   				             //Read their doc: https://firebase.flutter.dev/docs/auth/usage/
