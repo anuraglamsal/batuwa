@@ -55,6 +55,7 @@ dependencies:
   flutter_facebook_auth: ^3.4.0
   flutter_twitter_login: ^1.1.0
   flutter_native_splash: ^1.1.8+4
+  image_cropper: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -155,6 +156,7 @@ flutter:
     - assets/images/facebook-icon.svg
     - assets/images/twitter-icon.svg 
     - assets/images/welcome_banner.svg 
+    - assets/images/profpic2.png
   fonts:
     - family: Mohave
       fonts:
