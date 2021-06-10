@@ -17,6 +17,10 @@ class _profpicscreenState extends State<profpicscreen>{
   bool indicator = false;
   bool next = false;
   var _image;
+  /*var _onpressed = (){
+    upload_to_db();
+  };*/
+  bool circle = false;
   @override
   void initState(){ //This function is run before the widget is built.
     super.initState();
@@ -89,28 +93,68 @@ class _profpicscreenState extends State<profpicscreen>{
 		],
 	      ),
 	    ),
-	    SizedBox(height: 30),	
-	    SizedBox(height: 300),	
-	    Row(
-	      children: [
-		SizedBox(width: 255),
-		next ?
-	          Container(
-		    height: 45,
-		    child: ElevatedButton(
-		      onPressed: (){
-			update_token(0);
-		      },
-		      child: Text("Go to your feed", style: TextStyle(fontFamily: "Mohave", fontSize: 18),),
-		    )
-		  ) :
-		  SizedBox(),
-	      ],
+	    SizedBox(height: 20),
+	    circle ?
+	    CircularProgressIndicator(
+	      valueColor: AlwaysStoppedAnimation<Color>(Color(0xff07B0B5)),
+	    ) :
+	    Container(
+	      height: 35, 
+	      width: 80,
+	      child: ElevatedButton(
+		onPressed: (_image != null) ? (() => upload_to_db()) : null,
+		child: Text(
+		  "NEXT",
+		),
+		style: ButtonStyle(
+		  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+		    (Set<MaterialState> states) {
+		      if (states.contains(MaterialState.pressed))
+			return Color(0xff07B0B5); //On pressed color
+		      else if (states.contains(MaterialState.disabled))
+			return Color.fromRGBO(7, 176, 181, 0.2); //Disabled color
+		      return Color(0xff07B0B5); //Enabled color
+		    },
+		  ), 
+		),
+	      ),
+	    ),
+	    SizedBox(height: 256.5),
+	    Material(
+	      color: Colors.transparent,
+	      child: InkWell(
+		customBorder: CircleBorder(),
+		child: Container(
+		  width: 60,
+		  child: Row(
+		    children :[
+		      SizedBox(width: 10),
+		      Text(
+			"Skip",
+			style: TextStyle(color: Color(0xff757575),),
+		      ),
+		      Icon(
+			Icons.skip_next,
+			color: Color(0xff757575),
+			size: 22,
+		      ),
+		    ],
+		  ),
+		),
+		onTap: (){
+		  route_to_feed();
+		},
+	      ),
 	    ),
 	  ],
 	),
       ),
     );
+  }
+
+  route_to_feed() async{
+    await update_token(0);
+    Navigator.pop(context);
   }
 
   uploadImage() async{ //Read the 'Flutter cloud storage' docs and watch this video: https://www.youtube.com/watch?v=pvRpzyBYBbA to understand this.
@@ -133,29 +177,16 @@ class _profpicscreenState extends State<profpicscreen>{
       });
     }
   }
-
-  /*getImageUrl() async{//This gets the profile picture associated with the logged in user. To fully understand this, read this doc: 
-    		      //https://firebase.flutter.dev/docs/storage/usage.
-    bool flag = true;
-    try{
-      imageUrl = await firebase_storage.FirebaseStorage.instance.ref('ProfPic/${FirebaseAuth.instance.currentUser.uid.toString()}').getDownloadURL();
-      //'The "FirebaseAuth.instance.currentUser.uid" method fetches the unique user id of the logged in user.
-    }
-    catch(e){
-      flag = false;
-      setState((){//The widget is rebuilt when the url for the profile image is fetched.
-	indicator = false;
-	next = false;
-      });
-    }
-    if(flag){
-      save_image_url(imageUrl);
-      setState((){
-	indicator = false;
-	next = true;
-      });
-    }
-  }*/
+  
+  upload_to_db() async{
+    setState((){
+      circle = true;
+    });
+    await firebase_storage.FirebaseStorage.instance.ref('ProfPic/' + FirebaseAuth.instance.currentUser.uid).putFile(_image);
+    String dwnldurl = await firebase_storage.FirebaseStorage.instance.ref('ProfPic/' + FirebaseAuth.instance.currentUser.uid).getDownloadURL();
+    await save_image_url(dwnldurl);
+    route_to_feed();
+  }
 
 }
 

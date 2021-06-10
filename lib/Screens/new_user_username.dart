@@ -129,7 +129,7 @@ class _usernamescreenState extends State<usernamescreen>{
 		    child: ElevatedButton(
 		      onPressed: onpressed,
 		      child: Text(
-			"Next",
+			"NEXT",
 		      ),
 		      style: ButtonStyle(
 			backgroundColor: MaterialStateProperty.resolveWith<Color>(
